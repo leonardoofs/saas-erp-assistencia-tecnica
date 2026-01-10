@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de API - UnderTech</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/reset.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  
+  <style>
+    body {
+      padding: 40px;
+      background-color: var(--light-gray);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--white);
+      padding: 30px;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    h1 {
+      color: var(--text-primary);
+      margin-bottom: 30px;
+      font-size: var(--font-size-2xl);
+    }
+
+    h2 {
+      color: var(--primary-orange);
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: var(--font-size-lg);
+    }
+
+    .test-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: var(--border-radius-md);
+      border-left: 4px solid var(--primary-orange);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--light-gray);
+      border-radius: var(--border-radius-md);
+      font-size: var(--font-size-md);
+    }
+
+    button {
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--light-gray);
+      font-family: monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .result.success {
+      border-color: var(--prioridade-normal);
+      background: #f0fff0;
+    }
+
+    .result.error {
+      border-color: var(--status-atrasada);
+      background: #fff0f0;
+      color: var(--status-atrasada);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Teste de API - UnderTech</h1>
+    <p>Use esta página para testar os endpoints da API</p>
+
+    <!-- CRIAR CLIENTE -->
+    <div class="test-section">
+      <h2>1️⃣ Criar Cliente</h2>
+      <div class="form-group">
+        <label>Nome:</label>
+        <input type="text" id="cliente-nome" placeholder="João Silva" value="João Silva">
+      </div>
+      <div class="form-group">
+        <label>CPF:</label>
+        <input type="text" id="cliente-cpf" placeholder="12345678900" value="12345678900">
+      </div>
+      <div class="form-group">
+        <label>Telefone:</label>
+        <input type="text" id="cliente-telefone" placeholder="(11) 98765-4321" value="(11) 98765-4321">
+      </div>
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" id="cliente-email" placeholder="joao@email.com" value="joao@email.com">
+      </div>
+      <button class="btn btn-primary" onclick="criarCliente()">Criar Cliente</button>
+      <div id="result-criar-cliente" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- LISTAR CLIENTES -->
+    <div class="test-section">
+      <h2>2️⃣ Listar Clientes</h2>
+      <button class="btn btn-primary" onclick="listarClientes()">Listar Todos os Clientes</button>
+      <div id="result-listar-clientes" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- CRIAR ORDEM -->
+    <div class="test-section">
+      <h2>3️⃣ Criar Ordem de Serviço</h2>
+      <div class="form-group">
+        <label>ID do Cliente:</label>
+        <input type="number" id="ordem-cliente-id" placeholder="1" value="1">
+        <small style="color: #666;">Use o ID de um cliente que você criou acima</small>
+      </div>
+      <div class="form-group">
+        <label>Aparelho:</label>
+        <input type="text" id="ordem-aparelho" placeholder="iPhone 13" value="iPhone 13">
+      </div>
+      <div class="form-group">
+        <label>Marca:</label>
+        <input type="text" id="ordem-marca" placeholder="Apple" value="Apple">
+      </div>
+      <div class="form-group">
+        <label>Defeito:</label>
+        <input type="text" id="ordem-defeito" placeholder="Tela quebrada" value="Tela quebrada">
+      </div>
+      <div class="form-group">
+        <label>Prazo de Entrega:</label>
+        <input type="date" id="ordem-prazo">
+      </div>
+      <div class="form-group">
+        <label>Prioridade:</label>
+        <select id="ordem-prioridade" style="width: 100%; padding: 10px; border: 2px solid var(--light-gray); border-radius: var(--border-radius-md);">
+          <option value="normal">Normal</option>
+          <option value="alta">Alta</option>
+          <option value="urgente">Urgente</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Valor:</label>
+        <input type="number" id="ordem-valor" placeholder="450.00" value="450.00" step="0.01">
+      </div>
+      <button class="btn btn-primary" onclick="criarOrdem()">Criar Ordem</button>
+      <div id="result-criar-ordem" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- LISTAR ORDENS -->
+    <div class="test-section">
+      <h2>4️⃣ Listar Ordens de Serviço</h2>
+      <button class="btn btn-primary" onclick="listarOrdens()">Listar Todas as Ordens</button>
+      <div id="result-listar-ordens" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- VOLTAR -->
+    <div style="margin-top: 40px; text-align: center;">
+      <a href="dashboard.html" class="btn btn-secondary">← Voltar para Dashboard</a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  
+  <script>
+    // Verificar autenticação
+    if (!auth.requireAuth()) {
+      window.location.href = 'login.html';
+    }
+
+    // Definir data padrão (amanhã)
+    const amanha = new Date();
+    amanha.setDate(amanha.getDate() + 1);
+    document.getElementById('ordem-prazo').value = amanha.toISOString().split('T')[0];
+
+    // Criar Cliente
+    async function criarCliente() {
+      const resultDiv = document.getElementById('result-criar-cliente');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Enviando...';
+      resultDiv.className = 'result';
+
+      try {
+        const response = await api.post('/clientes', {
+          nome: document.getElementById('cliente-nome').value,
+          cpf: document.getElementById('cliente-cpf').value,
+          telefone: document.getElementById('cliente-telefone').value,
+          email: document.getElementById('cliente-email').value
+        });
+
+        resultDiv.className = 'result success';
+        resultDiv.textContent = JSON.stringify(response, null, 2);
+        utils.showToast('Cliente criado com sucesso!', 'success');
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `ERRO: ${error.message}`;
+        utils.showToast('Erro ao criar cliente', 'error');
+      }
+    }
+
+    // Listar Clientes
+    async function listarClientes() {
+      const resultDiv = document.getElementById('result-listar-clientes');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Carregando...';
+      resultDiv.className = 'result';
+
+      try {
+        const response = await api.get('/clientes');
+        resultDiv.className = 'result success';
+        resultDiv.textContent = JSON.stringify(response, null, 2);
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `ERRO: ${error.message}`;
+      }
+    }
+
+    // Criar Ordem
+    async function criarOrdem() {
+      const resultDiv = document.getElementById('result-criar-ordem');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Enviando...';
+      resultDiv.className = 'result';
+
+      try {
+        const response = await api.post('/ordens', {
+          cliente_id: parseInt(document.getElementById('ordem-cliente-id').value),
+          aparelho: document.getElementById('ordem-aparelho').value,
+          marca: document.getElementById('ordem-marca').value,
+          defeito: document.getElementById('ordem-defeito').value,
+          prazo_entrega: document.getElementById('ordem-prazo').value,
+          prioridade: document.getElementById('ordem-prioridade').value,
+          valor: parseFloat(document.getElementById('ordem-valor').value)
+        });
+
+        resultDiv.className = 'result success';
+        resultDiv.textContent = JSON.stringify(response, null, 2);
+        utils.showToast('Ordem criada com sucesso!', 'success');
+        
+        // Notificar o dashboard para atualizar (se estiver aberto)
+        if (window.opener && window.opener.dashboard) {
+          window.opener.dashboard.refresh();
+        }
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `ERRO: ${error.message}`;
+        utils.showToast('Erro ao criar ordem', 'error');
+      }
+    }
+
+    // Listar Ordens
+    async function listarOrdens() {
+      const resultDiv = document.getElementById('result-listar-ordens');
+      resultDiv.style.display = 'block';
+      resultDiv.textContent = 'Carregando...';
+      resultDiv.className = 'result';
+
+      try {
+        const response = await api.get('/ordens');
+        resultDiv.className = 'result success';
+        resultDiv.textContent = JSON.stringify(response, null, 2);
+      } catch (error) {
+        resultDiv.className = 'result error';
+        resultDiv.textContent = `ERRO: ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>

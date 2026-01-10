@@ -1,0 +1,112 @@
+/**
+ * UnderTech - Variáveis CSS
+ * Cores, fontes e espaçamentos centralizados
+ */
+
+:root {
+  /* === CORES PRIMÁRIAS === */
+  --primary-orange: #FF9505;
+  --secondary-orange: #FEB062;
+  --dark-orange: #CC7600;
+  
+  /* === CORES DE FUNDO === */
+  --dark-bg: #2B2B2B;
+  --darker-bg: #1C1C1C;
+  --darkest-bg: #131313;
+  --medium-gray: #505050;
+  --light-gray: #D4D4D2;
+  
+  /* === CORES DE STATUS === */
+  --status-atrasada: #D97878;
+  --status-hoje: #C4B454;
+  --status-amanha: #7CB97C;
+  --status-finalizada: #7B7BC4;
+  
+  /* === CORES DE PRIORIDADE === */
+  --prioridade-normal: #7CB97C;
+  --prioridade-alta: #C4B454;
+  --prioridade-urgente: #D97878;
+  
+  /* === CORES NEUTRAS === */
+  --white: #FFFFFF;
+  --black: #000000;
+  --text-primary: #1C1C1C;
+  --text-secondary: #505050;
+  --light-orange: #fae4c6;
+  
+  /* === TIPOGRAFIA === */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* === PESO DA FONTE === */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* TAMANHOS DE FONTE */
+  --font-size-xs: 10px;
+  --font-size-sm: 13px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 25px;
+  --font-size-2xl: 31px;
+  --font-size-3xl: 39px;
+  --font-size-4xl: 49px;
+  --font-size-5xl: 61px;
+  
+  /* === ESPAÇAMENTOS === */
+  --spacing-xs: 0.5rem;   /* 8px */
+  --spacing-sm: 1rem;     /* 16px */
+  --spacing-md: 1.5rem;   /* 24px */
+  --spacing-lg: 2rem;     /* 32px */
+  --spacing-xl: 3rem;     /* 48px */
+  --spacing-2xl: 4rem;    /* 64px */
+  
+  /* === BORDAS === */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-default: 1px solid #505050;
+  
+  /* === SOMBRAS === */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  
+  /* === TRANSIÇÕES === */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+  
+  /* === LAYOUT === */
+  --sidebar-width: 200px;
+  --header-height: 80px;
+  
+  /* === Z-INDEX === */
+  --z-base: 1;
+  --z-header: 100;
+  --z-sidebar: 200;
+  --z-dropdown: 300;
+  --z-modal: 500;
+  --z-tooltip: 600;
+
+  /* === CONTAINER GRADIENT TRASITION === */
+    --gradient-tabs: linear-gradient(
+    90deg,
+    #FEB062 0%,
+    #FF9505 25%,
+    #CC7600 50%,
+    #FF9505 75%,
+    #FEB062 100%
+  );
+
+    /* === TEXT GRADIENT TRASITION === */
+    --gradient-text: linear-gradient(
+    90deg,
+    #FEB062 0%,
+    #FF9505 50%,
+    #CC7600 100%
+  );
+}

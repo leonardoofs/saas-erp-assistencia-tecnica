@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - UnderTech</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/reset.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+      padding: var(--spacing-md);
+    }
+
+    .login-card {
+      background-color: var(--white);
+      border-radius: var(--border-radius-xl);
+      padding: var(--spacing-xl);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .login-logo {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-3xl);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .login-logo span {
+      color: var(--primary-orange);
+    }
+
+    .login-subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+
+    .login-form {
+      margin-top: var(--spacing-lg);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: var(--spacing-md);
+      font-size: var(--font-size-lg);
+      margin-top: var(--spacing-md);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: var(--spacing-lg);
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: var(--spacing-lg);
+      }
+      
+      .login-logo {
+        font-size: var(--font-size-2xl);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h1 class="login-logo">Under<span>Tech</span></h1>
+        <p class="login-subtitle">Sistema de Gestão para Assistência Técnica</p>
+      </div>
+
+      <form class="login-form" id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Usuário</label>
+          <input 
+            type="text" 
+            class="form-input" 
+            id="username" 
+            name="username" 
+            placeholder="Digite seu usuário"
+            required
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Senha</label>
+          <input 
+            type="password" 
+            class="form-input" 
+            id="password" 
+            name="password" 
+            placeholder="Digite sua senha"
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-login">
+          Entrar
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <p>Primeiro acesso? Use: <strong>admin</strong> / <strong>admin123</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  
+  <script>
+    // Redirecionar se já estiver autenticado
+    auth.redirectIfAuthenticated();
+
+    // Handler do formulário de login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      
+      // Desabilitar botão durante o login
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Entrando...';
+      
+      try {
+        const result = await auth.login(username, password);
+        
+        if (result.success) {
+          utils.showToast('Login realizado com sucesso!', 'success');
+          setTimeout(() => {
+            window.location.href = '/pages/dashboard.html';
+          }, 1000);
+        } else {
+          utils.showToast(result.message || 'Erro ao fazer login', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Entrar';
+        }
+      } catch (error) {
+        utils.showToast('Erro ao conectar com o servidor', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar';
+      }
+    });
+  </script>
+</body>
+</html>

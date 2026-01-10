@@ -1,0 +1,376 @@
+/**
+ * UnderTech - Dashboard
+ * Estilos específicos da página de dashboard
+ */
+
+/* === TABS DE NAVEGAÇÃO === */
+.dashboard-tabs {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  background-color: transparent;
+  padding: 0;
+  /* margin-bottom: var(--spacing-lg); */
+  position: relative;
+  padding-bottom: 3px; /* espaço da borda fixa */
+}
+
+.dashboard-tabs::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* width: 100%; */
+  height: 3px;
+
+  background: var(--gradient-tabs);
+  background-size: 200% 100%;
+  animation: gradientFlow 12s ease-in-out infinite;
+
+  z-index: 0;
+  /* background: var(--gradient-tabs); */
+}
+
+.tab-button {
+  flex: 1;
+  position: relative;
+  padding: var(--spacing-md) var(--spacing-lg);
+  width: 50%;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  border-radius: 0;
+  background-color: var(--white);
+  color: var(--primary-orange); /* fallback */
+  border: none;
+  text-align: center;
+  /* border-bottom: 3px solid var(--dark-orange); */
+  cursor: pointer;
+  z-index: 1;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.tab-button:not(.active) {
+  background: var(--white);
+}
+
+.tab-button:not(.active) .tab-text {
+  background: var(--gradient-text);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.tab-button::after {
+  transition: opacity 0.25s ease;
+}
+
+.tab-button:hover {
+  background-color: var(--light-orange);
+}
+
+.tab-button.left {
+  border-radius: 8px 0px 0px 0px;
+}
+
+.tab-button.right {
+  border-radius: 0px 8px 0px 0px;
+}
+
+.tab-button.left.active {
+  background: var(--gradient-tabs);
+  background-size: 200% 100%;
+  background-position: left;
+  /* border-bottom: 3px solid var(--dark-orange); */
+}
+
+.tab-button.right.active {
+  background: var(--gradient-tabs);
+  background-size: 200% 100%;
+  background-position: right;
+}
+
+.tab-button.active .tab-text {
+  color: var(--white);
+  -webkit-text-fill-color: var(--white);
+  background: none;
+}
+
+/* === ANIMAÇÃO TABS DE NAVEGAÇÃO === */
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.tab-button.active {
+  color: var(--white);
+  background: var(--gradient-tabs);
+  background-size: 200% 100%;
+  animation: gradientFlow 12s ease-in-out infinite;
+}
+
+.tab-button:not(.active) .tab-text {
+  background: var(--gradient-text);
+  background-size: 200% 100%;
+  animation: gradientFlow 12s ease-in-out infinite;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* === SUB TABS (Atualizar, Pesquisa, Prazos) === */
+.sub-tabs {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  /* background-color: var(--medium-gray); */
+  padding: 8px;
+  border-radius: var(--border-radius-md)
+}
+
+.sub-tab-button, .sub-tab-button-atualizar {
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--border-radius-md);
+  background-color: var(--white);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: none;
+}
+
+.sub-tab-button:not(.active) {
+  background: var(--white);
+}
+
+.sub-tab-button:not(.active) .tab-text {
+  background: var(--gradient-text);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.sub-tab-button::after {
+  transition: opacity 0.25s ease;
+}
+
+.sub-tab-button:hover {
+  background-color: var(--light-orange);
+  color: var(--white);
+}
+
+.sub-tab-button-atualizar {
+  background: linear-gradient(135deg, var(--prioridade-normal) 0%, var(--prioridade-normal) 50%, #5a9a5a 100%);
+  color: var(--white);
+}
+
+.sub-tab-button.pesquisa.active {
+  background: linear-gradient(90deg, var(--primary-orange) 0%, var(--secondary-orange) 50%, var(--dark-orange) 100%);
+  color: var(--white);
+}
+
+.sub-tab-button.prazos.active {
+  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 50%, var(--dark-orange) 100%);
+  color: var(--white);
+}
+
+/* === SEÇÕES === */
+.dashboard-section {
+  background-color: var(--white);
+  border-bottom: var(--border-default);
+  border-right: var(--border-default);
+  border-left: var(--border-default);
+  overflow-x: hidden;
+}
+
+.section-header {
+  background-color: var(--medium-gray);
+  color: var(--white);
+  padding: var(--spacing-md) var(--spacing-lg);
+  /* border-radius: var(--border-radius-md); */
+  /* margin-bottom: var(--spacing-md); */
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+/* === GRID DE CARDS DE STATUS === */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  min-width: 0;
+}
+
+/* === STATUS CARD === */
+.status-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,1) 100%);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1;
+  z-index: 1;
+}
+
+.status-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Cores de fundo dos cards com gradient 0% 50% 100% */
+.status-card.status-card--atrasada::before {
+  background: linear-gradient(135deg, var(--status-atrasada) 0%, var(--status-atrasada) 50%, #c45a5a 100%);
+}
+
+.status-card.status-card--hoje::before {
+  background: linear-gradient(135deg, var(--status-hoje) 0%, var(--status-hoje) 50%, #a89943 100%);
+}
+
+.status-card.status-card--amanha::before {
+  background: linear-gradient(135deg, var(--status-amanha) 0%, var(--status-amanha) 50%, #5a9a5a 100%);
+}
+
+.status-card.status-card--finalizadas::before {
+  background: linear-gradient(135deg, var(--status-finalizada) 0%, var(--status-finalizada) 50%, #5a5aa8 100%);
+}
+
+.status-card.status-card--normal::before {
+  background: linear-gradient(135deg, var(--prioridade-normal) 0%, var(--prioridade-normal) 50%, #5a9a5a 100%);
+}
+
+.status-card.status-card--alta::before {
+  background: linear-gradient(135deg, var(--prioridade-alta) 0%, var(--prioridade-alta) 50%, #a89943 100%);
+}
+
+.status-card.status-card--urgente::before {
+  background: linear-gradient(135deg, var(--prioridade-urgente) 0%, var(--prioridade-urgente) 50%, #c45a5a 100%);
+}
+
+/* Conteúdo do card */
+.status-card-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--white);
+}
+
+.status-number {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-5xl);
+  margin-bottom: var(--spacing-xs);
+  display: block;
+}
+
+.status-label {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  text-transform: capitalize;
+}
+
+/* Ícone decorativo no card - mais discreto e monocromático */
+.status-icon {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.2;
+  z-index: 1;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+  .dashboard-tabs {
+    flex-direction: column;
+  }
+  
+  .tab-button {
+    font-size: var(--font-size-md);
+    padding: var(--spacing-sm);
+  }
+  
+  .status-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-sm);
+  }
+  
+  .status-card {
+    min-height: 140px;
+    padding: var(--spacing-md);
+  }
+  
+  .status-number {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .status-label {
+    font-size: var(--font-size-md);
+  }
+  
+  .status-icon {
+    width: 30px;
+    height: 30px;
+    right: 15px;
+    bottom: 15px;
+  }
+  
+  .sub-tabs {
+    flex-wrap: wrap;
+  }
+  
+  .sub-tab-button {
+    flex: 1;
+    min-width: 100px;
+  }
+}
