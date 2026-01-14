@@ -58,7 +58,6 @@ async function carregarClientes(page = 1, search = '') {
         atualizarInfo(pagination, data.length);
       }
     } else {
-      // Se não houver dados ou sucesso for false
       mostrarEstadoVazio(search);
     }
   } catch (error) {
@@ -73,7 +72,6 @@ async function carregarClientes(page = 1, search = '') {
       </tr>
     `;
     
-    // Resetar informações
     document.getElementById('showing-count').textContent = '0';
     document.getElementById('total-count').textContent = '0';
     document.getElementById('pagination-controls').innerHTML = '';
@@ -125,7 +123,6 @@ function renderizarPaginacao(pagination) {
   const controls = document.getElementById('pagination-controls');
   controls.innerHTML = '';
 
-  // Se só tiver 1 página, não mostrar paginação
   if (totalPages <= 1) return;
 
   // Botão Anterior
@@ -215,16 +212,208 @@ function formatarCPF(cpf) {
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 }
 
-// === AÇÕES ===
-function visualizarCliente(id) {
-  utils.showToast('Visualização em desenvolvimento', 'info');
-  // TODO: Abrir modal com detalhes do cliente
+function formatarTelefone(telefone) {
+  if (!telefone) return '-';
+  const cleaned = telefone.replace(/\D/g, '');
+  if (cleaned.length === 11) {
+    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  }
+  if (cleaned.length === 10) {
+    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+  }
+  return telefone;
 }
 
+// ===================================================================
+// 🎯 FUNÇÃO 1: VISUALIZAR CLIENTE (MODAL)
+// ===================================================================
+async function visualizarCliente(id) {
+  try {
+    // Buscar dados do cliente
+    const response = await api.get(`/clientes/${id}`);
+    
+    if (!response.success || !response.data) {
+      throw new Error('Cliente não encontrado');
+    }
+
+    const cliente = response.data;
+    
+    // Criar modal
+    const modal = criarModalVisualizacao(cliente);
+    document.body.appendChild(modal);
+    
+    // Adicionar evento para fechar
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || e.target.classList.contains('modal-close-btn')) {
+        fecharModal(modal);
+      }
+    });
+
+    // Focar no modal
+    setTimeout(() => modal.classList.add('active'), 10);
+
+  } catch (error) {
+    console.error('Erro ao visualizar cliente:', error);
+    utils.showToast(error.message || 'Erro ao carregar dados do cliente', 'error');
+  }
+}
+
+// Criar HTML do modal de visualização
+function criarModalVisualizacao(cliente) {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">📋 Detalhes do Cliente</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Informações Principais -->
+        <div class="info-section">
+          <h3 class="info-section-title">Informações Principais</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">ID:</span>
+              <span class="info-value">#${cliente.id}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Nome:</span>
+              <span class="info-value">${cliente.nome}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">CPF:</span>
+              <span class="info-value">${formatarCPF(cliente.cpf)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Situação:</span>
+              <span class="situacao-badge situacao-${cliente.situacao || 'ativo'}">
+                ${cliente.situacao || 'Ativo'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contatos -->
+        <div class="info-section">
+          <h3 class="info-section-title">Contatos</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Telefone:</span>
+              <span class="info-value">${formatarTelefone(cliente.telefone)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Telefone Contato:</span>
+              <span class="info-value">${formatarTelefone(cliente.telefone_contato) || '-'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Instagram:</span>
+              <span class="info-value">${cliente.email?.replace('@instagram.com', '') || '-'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="info-section">
+          <h3 class="info-section-title">Endereço</h3>
+          <div class="info-grid">
+            <div class="info-item full-width">
+              <span class="info-label">Rua:</span>
+              <span class="info-value">${cliente.endereco || '-'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Cidade:</span>
+              <span class="info-value">${cliente.cidade || '-'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Estado:</span>
+              <span class="info-value">${cliente.estado || '-'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">CEP:</span>
+              <span class="info-value">${cliente.cep || '-'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        ${cliente.observacoes ? `
+        <div class="info-section">
+          <h3 class="info-section-title">Observações</h3>
+          <p class="info-observacoes">${cliente.observacoes}</p>
+        </div>
+        ` : ''}
+
+        <!-- Datas -->
+        <div class="info-section">
+          <h3 class="info-section-title">Registros</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Cadastrado em:</span>
+              <span class="info-value">${formatarData(cliente.created_at)}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Última atualização:</span>
+              <span class="info-value">${formatarData(cliente.updated_at)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-edit" onclick="fecharModalEEditar(${cliente.id})">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Editar
+        </button>
+        <button class="btn-modal-close modal-close-btn">Fechar</button>
+      </div>
+    </div>
+  `;
+
+  return modal;
+}
+
+// Formatar data
+function formatarData(dataString) {
+  if (!dataString) return '-';
+  const data = new Date(dataString);
+  return data.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Fechar modal com animação
+function fecharModal(modal) {
+  modal.classList.remove('active');
+  setTimeout(() => modal.remove(), 300);
+}
+
+// Fechar modal e ir para edição
+function fecharModalEEditar(id) {
+  const modal = document.querySelector('.modal-overlay');
+  if (modal) fecharModal(modal);
+  setTimeout(() => editarCliente(id), 100);
+}
+
+// ===================================================================
+// 🎯 FUNÇÃO 2: EDITAR CLIENTE
+// ===================================================================
 function editarCliente(id) {
+  // Redirecionar para a página de cadastro com parâmetro de edição
   window.location.href = `cadastrar-cliente.html?edit=${id}`;
 }
 
+// ===================================================================
+// 🎯 FUNÇÃO 3: DELETAR CLIENTE (já existente - mantida)
+// ===================================================================
 async function deletarCliente(id, nome) {
   if (!confirm(`Tem certeza que deseja deletar o cliente "${nome}"?`)) return;
 
@@ -245,7 +434,7 @@ searchInput.addEventListener('input', (e) => {
   clearTimeout(searchTimeout);
   searchTimeout = setTimeout(() => {
     carregarClientes(1, e.target.value);
-  }, 500); // Debounce de 500ms
+  }, 500);
 });
 
 // === LOGOUT ===

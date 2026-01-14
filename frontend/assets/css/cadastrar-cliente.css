@@ -41,7 +41,6 @@
   padding: 0;
   position: relative;
   padding-bottom: 3px;
-  margin-bottom: var(--spacing-lg);
 }
 
 .form-tabs::after {
@@ -119,10 +118,12 @@
 /* === CONTAINER DO FORMULÁRIO === */
 .form-container {
   background-color: var(--white);
-  border-bottom: var(--border-default);
-  border-right: var(--border-default);
-  border-left: var(--border-default);
+  /* border-bottom: var(--border-default); */
+  /* border-right: var(--border-default); */
+  /* border-left: var(--border-default); */
   padding: var(--spacing-xl);
+  /* border: 1px solid var(--dark-orange); */
+  border-radius: 0px 0px 8px 8px;
 }
 
 .form-section {
@@ -136,7 +137,7 @@
 /* === GRID DE CAMPOS === */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 }
@@ -149,7 +150,7 @@
   grid-column: 1 / -1;
 }
 
-.form-group.grid-span-2 {
+.form-group.grid-span-3 {
   grid-column: span 2;
 }
 
@@ -246,17 +247,16 @@ select.form-input {
 /* === TABELA DE ÚLTIMOS CADASTROS === */
 .recent-registrations {
   margin-top: var(--spacing-xl);
-  background-color: var(--medium-gray);
-  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
 }
 
 .recent-registrations-header {
-  background-color: var(--medium-gray);
+  background-color: var(--dark-bg);
   color: var(--white);
   padding: var(--spacing-md) var(--spacing-lg);
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
+  border-radius: 8px 8px 0px 0px;
 }
 
 .recent-registrations-table {

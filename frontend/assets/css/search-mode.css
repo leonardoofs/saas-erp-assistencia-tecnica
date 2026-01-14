@@ -6,13 +6,13 @@
 /* === CONTAINER DE PESQUISA === */
 .search-container {
   background-color: var(--white);
-  border-bottom: var(--border-default);
-  border-right: var(--border-default);
-  border-left: var(--border-default);
+  /* border-bottom: var(--border-default); */
+  /* border-right: var(--border-default); */
+  /* border-left: var(--border-default); */
   padding: var(--spacing-lg);
   display: none; /* Oculto por padrão */
   border-radius: 0px 0px 8px 8px;
-  border-color: var(--dark-orange);
+  /* border-color: var(--dark-orange); */
 }
 
 .search-container.active {
