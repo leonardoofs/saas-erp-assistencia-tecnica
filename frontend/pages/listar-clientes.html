@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastrar Cliente - UnderTech</title>
+  <title>Listar Clientes - UnderTech</title>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="../assets/css/layout.css">
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/sidebar-dropdown.css">
-  <link rel="stylesheet" href="../assets/css/cadastrar-cliente.css">
+  <link rel="stylesheet" href="../assets/css/listar-clientes.css">
 </head>
 <body>
   <div class="app-container">
@@ -74,8 +74,8 @@
                 </svg>
               </button>
               <ul class="nav-submenu open">
-                <li><a href="cadastrar-cliente.html" class="nav-subitem active">Cadastrar cliente</a></li>
-                <li><a href="listar-clientes.html" class="nav-subitem">Listar clientes</a></li>
+                <li><a href="cadastrar-cliente.html" class="nav-subitem">Cadastrar cliente</a></li>
+                <li><a href="listar-clientes.html" class="nav-subitem active">Listar clientes</a></li>
               </ul>
             </li>
 
@@ -137,162 +137,69 @@
       <main class="content">
         <!-- Título da Página -->
         <div class="welcome-section">
-          <h2 class="welcome-title">Cadastro de cliente</h2>
+          <h2 class="welcome-title">Listar clientes</h2>
           <nav class="breadcrumb">
             <a href="dashboard.html" class="breadcrumb-link">Início</a>
             <span class="breadcrumb-separator">›</span>
             <span class="breadcrumb-current">Clientes</span>
             <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">Cadastrar cliente</span>
+            <span class="breadcrumb-current">Listar clientes</span>
           </nav>
         </div>
 
-        <!-- Formulário de Cadastro -->
+        <!-- Área de Listagem -->
         <section class="dashboard-content">
-          <!-- Tabs do Formulário -->
-          <div class="form-tabs">
-            <button class="form-tab active" data-tab="dados-gerais">
-              <span class="tab-text">Dados Gerais</span>
-            </button>
-            <button class="form-tab" data-tab="campos-adicionais">
-              <span class="tab-text">Campos Adicionais</span>
-            </button>
-          </div>
-
-          <!-- Container do Formulário -->
-          <div class="form-container">
-            <form id="form-cadastrar-cliente">
-              <!-- Seção: Dados Gerais -->
-              <div class="form-section active" id="section-dados-gerais">
-                <div class="form-grid">
-                  <!-- Linha 1: Tipo de Cliente | Nome | CPF -->
-                  <div class="form-group">
-                    <label class="form-label">Tipo de Cliente</label>
-                    <select class="form-input" name="tipo_cliente">
-                      <option value="pessoa_fisica" selected>Pessoa Física</option>
-                      <option value="pessoa_juridica">Pessoa Jurídica</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Nome *</label>
-                    <input type="text" class="form-input" name="nome" placeholder="Nome completo" required>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">CPF</label>
-                    <div class="input-with-checkbox">
-                      <input type="text" class="form-input" name="cpf" id="cpf-input" placeholder="000.000.000-00" maxlength="14">
-                      <label class="checkbox-label">
-                        <input type="checkbox" id="cpf-nao-sabe" name="cpf_nao_sabe">
-                        <span>Não sabe</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <!-- Linha 2: Telefone Pessoal | Telefone Contato | Instagram -->
-                  <div class="form-group">
-                    <label class="form-label">Telefone Pessoal *</label>
-                    <div class="input-with-checkbox">
-                      <input type="tel" class="form-input" name="telefone" id="telefone-input" placeholder="(00) 00000-0000" required>
-                      <label class="checkbox-label">
-                        <input type="checkbox" id="telefone-nao-sabe" name="telefone_nao_sabe">
-                        <span>Não sabe</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Telefone Contato</label>
-                    <input type="tel" class="form-input" name="telefone_contato" placeholder="(00) 00000-0000">
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Instagram</label>
-                    <input type="text" class="form-input" name="instagram" placeholder="@usuario">
-                  </div>
-
-                  <!-- Linha 3: Situação | Responsável pelo cadastro -->
-                  <div class="form-group">
-                    <label class="form-label">Situação</label>
-                    <select class="form-input" name="situacao">
-                      <option value="ativo" selected>Ativo</option>
-                      <option value="inativo">Inativo</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group grid-span-2">
-                    <label class="form-label">Responsável pelo cadastro *</label>
-                    <input type="text" class="form-input" name="responsavel" placeholder="Nome do responsável" required>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Seção: Campos Adicionais -->
-              <div class="form-section" id="section-campos-adicionais">
-                <div class="form-grid">
-                  <div class="form-group full-width">
-                    <label class="form-label">Endereço</label>
-                    <input type="text" class="form-input" name="endereco" placeholder="Rua, número, complemento">
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Cidade</label>
-                    <input type="text" class="form-input" name="cidade" placeholder="Nome da cidade">
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <input type="text" class="form-input" name="estado" placeholder="UF" maxlength="2">
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label">CEP</label>
-                    <input type="text" class="form-input" name="cep" placeholder="00000-000" maxlength="9">
-                  </div>
-
-                  <div class="form-group full-width">
-                    <label class="form-label">Observações</label>
-                    <textarea class="form-input" name="observacoes" placeholder="Observações adicionais" rows="4"></textarea>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Botões de Ação -->
-              <div class="form-actions">
-                <button type="submit" class="btn-cadastrar">Cadastrar</button>
-                <button type="button" class="btn-cancelar" id="btn-cancelar">Cancelar</button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Tabela de Últimos Cadastros -->
-          <div class="recent-registrations">
-            <div class="recent-registrations-header">
-              Últimos cadastros realizados
+          <!-- Barra de Filtros -->
+          <div class="filter-bar">
+            <div class="search-box">
+              <input type="text" id="search-input" class="search-input" placeholder="Buscar por nome, CPF ou telefone...">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
             </div>
-            <table class="recent-registrations-table">
+
+            <button class="btn-add" onclick="window.location.href='cadastrar-cliente.html'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Novo Cliente
+            </button>
+          </div>
+
+          <!-- Tabela de Clientes -->
+          <div class="table-container">
+            <table class="clients-table">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>Nome</th>
                   <th>CPF</th>
-                  <th>Telefone Pessoal</th>
-                  <th>Telefone Contato</th>
+                  <th>Telefone</th>
                   <th>Instagram</th>
+                  <th>Situação</th>
                   <th>Ações</th>
                 </tr>
               </thead>
-              <tbody id="recent-clients-tbody">
+              <tbody id="clients-tbody">
                 <tr>
-                  <td colspan="7" style="text-align: center; padding: 20px; color: #666;">
-                    Nenhum cliente cadastrado ainda
+                  <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                    <div class="loading-spinner"></div>
+                    Carregando clientes...
                   </td>
                 </tr>
               </tbody>
             </table>
-            <div class="table-footer">
-              Mostrando <span id="total-clients">0</span> no total de <span id="total-clients-db">0</span>
+          </div>
+
+          <!-- Paginação -->
+          <div class="pagination-container">
+            <div class="pagination-info">
+              Mostrando <span id="showing-count">0</span> de <span id="total-count">0</span> clientes
+            </div>
+            <div class="pagination-controls" id="pagination-controls">
+              <!-- Botões de paginação serão inseridos via JS -->
             </div>
           </div>
         </section>
@@ -305,6 +212,6 @@
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/sidebar.js"></script>
-  <script src="../assets/js/cadastrar-cliente.js"></script>
+  <script src="../assets/js/listar-clientes.js"></script>
 </body>
 </html>

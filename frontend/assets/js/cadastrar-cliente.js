@@ -76,6 +76,79 @@ if (cepInput) {
   });
 }
 
+// === GERENCIAR CHECKBOX "NÃO SABE" ===
+const cpfCheckbox = document.getElementById('cpf-nao-sabe');
+const cpfInputField = document.getElementById('cpf-input');
+
+if (cpfCheckbox && cpfInputField) {
+  cpfCheckbox.addEventListener('change', (e) => {
+    if (e.target.checked) {
+      cpfInputField.value = '';
+      cpfInputField.disabled = true;
+    } else {
+      cpfInputField.disabled = false;
+    }
+  });
+}
+
+const telefoneCheckbox = document.getElementById('telefone-nao-sabe');
+const telefoneInputField = document.getElementById('telefone-input');
+
+if (telefoneCheckbox && telefoneInputField) {
+  telefoneCheckbox.addEventListener('change', (e) => {
+    if (e.target.checked) {
+      telefoneInputField.value = '';
+      telefoneInputField.disabled = true;
+      telefoneInputField.removeAttribute('required');
+    } else {
+      telefoneInputField.disabled = false;
+      telefoneInputField.setAttribute('required', 'required');
+    }
+  });
+}
+
+// === VALIDAÇÃO DE CPF ===
+function validarCPF(cpf) {
+  // Remove caracteres não numéricos
+  cpf = cpf.replace(/\D/g, '');
+
+  // Verifica se tem 11 dígitos
+  if (cpf.length !== 11) {
+    return false;
+  }
+
+  // Verifica se todos os dígitos são iguais (ex: 111.111.111-11)
+  if (/^(\d)\1{10}$/.test(cpf)) {
+    return false;
+  }
+
+  // Validação do primeiro dígito verificador
+  let soma = 0;
+  for (let i = 0; i < 9; i++) {
+    soma += parseInt(cpf.charAt(i)) * (10 - i);
+  }
+  let resto = 11 - (soma % 11);
+  let digitoVerificador1 = resto >= 10 ? 0 : resto;
+
+  if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+    return false;
+  }
+
+  // Validação do segundo dígito verificador
+  soma = 0;
+  for (let i = 0; i < 10; i++) {
+    soma += parseInt(cpf.charAt(i)) * (11 - i);
+  }
+  resto = 11 - (soma % 11);
+  let digitoVerificador2 = resto >= 10 ? 0 : resto;
+
+  if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+    return false;
+  }
+
+  return true;
+}
+
 // === SUBMETER FORMULÁRIO ===
 const formCadastrarCliente = document.getElementById('form-cadastrar-cliente');
 
@@ -83,33 +156,97 @@ formCadastrarCliente.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
+  
+  // Verificar checkbox "Não sabe" do CPF
+  const cpfNaoSabe = formData.get('cpf_nao_sabe');
+  const cpfValue = formData.get('cpf');
+  
+  // Validar CPF (se não marcou "Não sabe" e preencheu o campo)
+  if (!cpfNaoSabe && cpfValue) {
+    const cpfLimpo = cpfValue.replace(/\D/g, '');
+    
+    // Verificar se tem 11 dígitos
+    if (cpfLimpo.length > 0 && cpfLimpo.length !== 11) {
+      utils.showToast('CPF deve conter exatamente 11 dígitos', 'error');
+      document.getElementById('cpf-input').focus();
+      return;
+    }
+    
+    // Validar CPF
+    if (cpfLimpo.length === 11 && !validarCPF(cpfLimpo)) {
+      utils.showToast('CPF inválido. Verifique os números digitados', 'error');
+      document.getElementById('cpf-input').focus();
+      return;
+    }
+  }
+  
+  // Verificar checkbox "Não sabe" do telefone
+  const telefoneNaoSabe = formData.get('telefone_nao_sabe');
+  const telefoneValue = formData.get('telefone');
+  
+  // Se marcou "Não sabe" no telefone, não é obrigatório
+  if (!telefoneNaoSabe && !telefoneValue) {
+    utils.showToast('Telefone pessoal é obrigatório', 'error');
+    document.getElementById('telefone-input').focus();
+    return;
+  }
+
   const data = {
     nome: formData.get('nome'),
-    cpf: formData.get('cpf')?.replace(/\D/g, ''),
-    telefone: formData.get('telefone'),
-    email: formData.get('instagram') ? `${formData.get('instagram')}@instagram.com` : null,
+    cpf: cpfNaoSabe ? null : cpfValue?.replace(/\D/g, ''),
+    telefone: telefoneNaoSabe ? 'Não informado' : telefoneValue,
+    telefone_contato: formData.get('telefone_contato'),
+    email: formData.get('instagram') ? `${formData.get('instagram').replace('@', '')}@instagram.com` : null,
+    situacao: formData.get('situacao'),
+    responsavel: formData.get('responsavel'),
     endereco: formData.get('endereco'),
     cidade: formData.get('cidade'),
     estado: formData.get('estado'),
+    cep: formData.get('cep')?.replace(/\D/g, ''),
     observacoes: formData.get('observacoes')
   };
 
   try {
-    const response = await api.post('/clientes', data);
+    const editId = formCadastrarCliente.dataset.editId;
+    
+    if (editId) {
+      // Modo de atualização
+      const response = await api.put(`/clientes/${editId}`, data);
+      
+      if (response.success) {
+        utils.showToast('Cliente atualizado com sucesso!', 'success');
+        delete formCadastrarCliente.dataset.editId;
+        document.querySelector('.btn-cadastrar').textContent = 'Cadastrar';
+        limparFormulario();
+        carregarUltimosClientes();
+      }
+    } else {
+      // Modo de criação
+      const response = await api.post('/clientes', data);
 
-    if (response.success) {
-      utils.showToast('Cliente cadastrado com sucesso!', 'success');
-      limparFormulario();
-      carregarUltimosClientes();
+      if (response.success) {
+        utils.showToast('Cliente cadastrado com sucesso!', 'success');
+        limparFormulario();
+        carregarUltimosClientes();
+      }
     }
   } catch (error) {
-    utils.showToast(error.message || 'Erro ao cadastrar cliente', 'error');
+    utils.showToast(error.message || 'Erro ao salvar cliente', 'error');
   }
 });
 
 // === LIMPAR FORMULÁRIO ===
 function limparFormulario() {
   formCadastrarCliente.reset();
+  
+  // Resetar modo de edição
+  delete formCadastrarCliente.dataset.editId;
+  document.querySelector('.btn-cadastrar').textContent = 'Cadastrar';
+  
+  // Resetar checkboxes "Não sabe"
+  document.getElementById('cpf-input').disabled = false;
+  document.getElementById('telefone-input').disabled = false;
+  document.getElementById('telefone-input').setAttribute('required', 'required');
   
   // Voltar para a primeira tab
   formTabs.forEach(t => t.classList.remove('active'));
@@ -124,12 +261,25 @@ document.getElementById('btn-cancelar').addEventListener('click', limparFormular
 // === CARREGAR ÚLTIMOS CLIENTES ===
 async function carregarUltimosClientes() {
   try {
-    const response = await api.get('/clientes?limit=10');
+    // Buscar apenas os últimos 10 clientes
+    const response = await api.get('/clientes?limit=10&page=1');
 
     if (response.success && response.data.length > 0) {
       renderizarTabelaClientes(response.data);
       document.getElementById('total-clients').textContent = response.data.length;
       document.getElementById('total-clients-db').textContent = response.pagination.total;
+    } else {
+      // Mostrar mensagem quando não há clientes
+      const tbody = document.getElementById('recent-clients-tbody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 20px; color: #666;">
+            Nenhum cliente cadastrado ainda
+          </td>
+        </tr>
+      `;
+      document.getElementById('total-clients').textContent = '0';
+      document.getElementById('total-clients-db').textContent = '0';
     }
   } catch (error) {
     console.error('Erro ao carregar clientes:', error);
@@ -174,9 +324,48 @@ function formatarCPF(cpf) {
 }
 
 // === EDITAR CLIENTE ===
-function editarCliente(id) {
-  utils.showToast('Função de edição em desenvolvimento', 'info');
-  // TODO: Implementar edição
+async function editarCliente(id) {
+  try {
+    // Buscar dados do cliente
+    const response = await api.get(`/clientes/${id}`);
+    
+    if (response.success && response.data) {
+      const cliente = response.data;
+      
+      // Preencher formulário com os dados do cliente
+      document.querySelector('input[name="nome"]').value = cliente.nome || '';
+      document.querySelector('input[name="cpf"]').value = formatarCPF(cliente.cpf) || '';
+      document.querySelector('input[name="telefone"]').value = cliente.telefone || '';
+      document.querySelector('input[name="telefone_contato"]').value = cliente.telefone_contato || '';
+      document.querySelector('input[name="instagram"]').value = cliente.email?.replace('@instagram.com', '') || '';
+      document.querySelector('select[name="situacao"]').value = cliente.situacao || 'ativo';
+      document.querySelector('input[name="responsavel"]').value = cliente.responsavel || '';
+      
+      // Campos adicionais
+      document.querySelector('input[name="endereco"]').value = cliente.endereco || '';
+      document.querySelector('input[name="cidade"]').value = cliente.cidade || '';
+      document.querySelector('input[name="estado"]').value = cliente.estado || '';
+      document.querySelector('input[name="cep"]').value = cliente.cep || '';
+      document.querySelector('textarea[name="observacoes"]').value = cliente.observacoes || '';
+      
+      // Voltar para a primeira tab
+      formTabs.forEach(t => t.classList.remove('active'));
+      formSections.forEach(s => s.classList.remove('active'));
+      formTabs[0].classList.add('active');
+      formSections[0].classList.add('active');
+      
+      // Mudar comportamento do formulário para atualização
+      formCadastrarCliente.dataset.editId = id;
+      document.querySelector('.btn-cadastrar').textContent = 'Atualizar';
+      
+      // Scroll para o topo
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      utils.showToast('Dados carregados para edição', 'info');
+    }
+  } catch (error) {
+    utils.showToast(error.message || 'Erro ao carregar dados do cliente', 'error');
+  }
 }
 
 // === DELETAR CLIENTE ===
