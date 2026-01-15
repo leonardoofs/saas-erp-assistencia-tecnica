@@ -1,4 +1,5 @@
 const { runQuery, getQuery, allQuery } = require('../config/database');
+const { aplicarSituacaoEmClientes } = require('../services/situacaoService');
 
 /**
  * Listar todos os clientes
@@ -22,6 +23,9 @@ const listarClientes = async (req, res) => {
 
     const clientes = await allQuery(sql, params);
 
+    // APLICAR SITUAÇÃO AUTOMÁTICA
+    const clientesComSituacao = aplicarSituacaoEmClientes(clientes);
+
     // Contar total
     let countSql = 'SELECT COUNT(*) as total FROM clientes';
     if (search) {
@@ -31,7 +35,7 @@ const listarClientes = async (req, res) => {
 
     res.json({
       success: true,
-      data: clientes,
+      data: clientesComSituacao,
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
@@ -64,9 +68,12 @@ const buscarCliente = async (req, res) => {
       });
     }
 
+    // APLICAR SITUAÇÃO AUTOMÁTICA
+    const clientesComSituacao = aplicarSituacaoEmClientes([cliente]);
+
     res.json({
       success: true,
-      data: cliente
+      data: clientesComSituacao[0]
     });
   } catch (error) {
     console.error('Erro ao buscar cliente:', error);
@@ -78,15 +85,19 @@ const buscarCliente = async (req, res) => {
 };
 
 /**
- * Criar novo cliente
+ * Criar novo cliente - COM VERIFICAÇÃO DE CPF DUPLICADO
  */
+
 const criarCliente = async (req, res) => {
   try {
     const {
       nome,
       cpf,
       telefone,
+      telefone_contato,
       email,
+      situacao,
+      responsavel,
       endereco,
       cidade,
       estado,
@@ -102,21 +113,21 @@ const criarCliente = async (req, res) => {
       });
     }
 
-    // Verificar se CPF já existe (se fornecido)
+    // 🔧 CORREÇÃO: Verificar se CPF já existe (se fornecido)
     if (cpf) {
-      const clienteExistente = await getQuery('SELECT id FROM clientes WHERE cpf = ?', [cpf]);
+      const clienteExistente = await getQuery('SELECT id, nome FROM clientes WHERE cpf = ?', [cpf]);
       if (clienteExistente) {
         return res.status(400).json({
           success: false,
-          message: 'CPF já cadastrado'
+          message: `CPF já cadastrado para o cliente "${clienteExistente.nome}"`
         });
       }
     }
 
     const result = await runQuery(
-      `INSERT INTO clientes (nome, cpf, telefone, email, endereco, cidade, estado, cep, observacoes)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [nome, cpf, telefone, email, endereco, cidade, estado, cep, observacoes]
+      `INSERT INTO clientes (nome, cpf, telefone, telefone_contato, email, situacao, responsavel, endereco, cidade, estado, cep, observacoes)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [nome, cpf, telefone, telefone_contato, email, situacao || 'ativo', responsavel, endereco, cidade, estado, cep, observacoes]
     );
 
     res.status(201).json({
@@ -139,7 +150,7 @@ const criarCliente = async (req, res) => {
 };
 
 /**
- * Atualizar cliente
+ * Atualizar cliente - COM VERIFICAÇÃO DE CPF DUPLICADO
  */
 const atualizarCliente = async (req, res) => {
   try {
@@ -148,7 +159,10 @@ const atualizarCliente = async (req, res) => {
       nome,
       cpf,
       telefone,
+      telefone_contato,
       email,
+      situacao,
+      responsavel,
       endereco,
       cidade,
       estado,
@@ -165,12 +179,28 @@ const atualizarCliente = async (req, res) => {
       });
     }
 
+    // 🔧 CORREÇÃO: Verificar se CPF já existe em OUTRO cliente
+    if (cpf) {
+      const cpfDuplicado = await getQuery(
+        'SELECT id, nome FROM clientes WHERE cpf = ? AND id != ?',
+        [cpf, id]
+      );
+      
+      if (cpfDuplicado) {
+        return res.status(400).json({
+          success: false,
+          message: `CPF já cadastrado para o cliente "${cpfDuplicado.nome}"`
+        });
+      }
+    }
+
     await runQuery(
       `UPDATE clientes 
-       SET nome = ?, cpf = ?, telefone = ?, email = ?, endereco = ?, 
-           cidade = ?, estado = ?, cep = ?, observacoes = ?, updated_at = CURRENT_TIMESTAMP
+       SET nome = ?, cpf = ?, telefone = ?, telefone_contato = ?, email = ?, situacao = ?,
+           responsavel = ?, endereco = ?, cidade = ?, estado = ?, cep = ?, 
+           observacoes = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
-      [nome, cpf, telefone, email, endereco, cidade, estado, cep, observacoes, id]
+      [nome, cpf, telefone, telefone_contato, email, situacao, responsavel, endereco, cidade, estado, cep, observacoes, id]
     );
 
     res.json({

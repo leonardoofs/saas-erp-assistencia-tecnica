@@ -1,0 +1,109 @@
+
+╔═══════════════════════════════════════════════════════════════╗
+║           📋 CONTEXTO DO PROJETO UNDERTECH                     ║
+║                 Gerado em: 14/01/2026, 23:16:38          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📊 ESTATÍSTICAS DO PROJETO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 Total de arquivos: 45
+📁 Total de pastas: 14
+📄 Arquivos HTML: 6
+🎨 Arquivos CSS: 9
+⚙️ Arquivos JavaScript: 24
+📝 Total de linhas de código: 8.814
+
+📂 ESTRUTURA DE PASTAS E ARQUIVOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+undertech/
+├── 📁 backend/
+│   ├── 📁 database/
+│    │    └── 📄 undertech.db        
+│   ├── 📁 migrations/
+│   │   └── 📄 add-ultima-compra.js (62 linhas)
+│   ├── 📄 server.js (83 linhas)
+│   └── 📁 src/
+│       ├── 📁 config/
+│       │   ├── 📄 database.js (160 linhas)
+│       │   └── 📄 jwt.js (35 linhas)
+│       ├── 📁 controllers/
+│       │   ├── 📄 authController.js (154 linhas)
+│       │   ├── 📄 clientesController.js (258 linhas)
+│       │   ├── 📄 dashboardController.js (133 linhas)
+│       │   ├── 📄 ordensController.js (260 linhas)
+│       │   └── 📄 reformasController.js (258 linhas)
+│       ├── 📁 middlewares/
+│       │   └── 📄 authMiddleware.js (74 linhas)
+│       ├── 📁 routes/
+│       │   ├── 📄 auth.js (13 linhas)
+│       │   ├── 📄 clientes.js (16 linhas)
+│       │   ├── 📄 dashboard-routes.js (13 linhas)
+│       │   ├── 📄 ordens.js (16 linhas)
+│       │   └── 📄 reformas.js (16 linhas)
+│       └── 📁 services/
+│           └── 📄 situacaoService.js (164 linhas)
+├── 📄 CONTEXT-DIFF.txt (852 linhas)
+├── 📄 CONTEXT.txt (20 linhas)
+├── 📄 env.sh (13 linhas)
+├── 📁 frontend/
+│   ├── 📁 assets/
+│   │   ├── 📁 css/
+│   │   │   ├── 📄 cadastrar-cliente.css (387 linhas)
+│   │   │   ├── 📄 components.css (210 linhas)
+│   │   │   ├── 📄 dashboard.css (376 linhas)
+│   │   │   ├── 📄 layout.css (213 linhas)
+│   │   │   ├── 📄 listar-clientes.css (544 linhas)
+│   │   │   ├── 📄 reset.css (128 linhas)
+│   │   │   ├── 📄 search-mode.css (330 linhas)
+│   │   │   ├── 📄 sidebar-dropdown.css (121 linhas)
+│   │   │   └── 📄 variables.css (112 linhas)
+│   │   ├── 📁 img/
+│   │   └── 📁 js/
+│   │       ├── 📄 api.js (172 linhas)
+│   │       ├── 📄 auth.js (101 linhas)
+│   │       ├── 📄 cadastrar-cliente.js (401 linhas)
+│   │       ├── 📄 dashboard.js (433 linhas)
+│   │       ├── 📄 listar-clientes.js (460 linhas)
+│   │       ├── 📄 sidebar.js (119 linhas)
+│   │       └── 📄 utils.js (173 linhas)
+│   ├── 📄 index.html (20 linhas)
+│   └── 📁 pages/
+│       ├── 📄 cadastrar-cliente.html (323 linhas)
+│       ├── 📄 dashboard.html (384 linhas)
+│       ├── 📄 listar-clientes.html (217 linhas)
+│       ├── 📄 login.html (179 linhas)
+│       └── 📄 teste-api.html (295 linhas)
+├── 📄 generate-context.js (139 linhas)
+├── 📄 gitignore.sh (33 linhas)
+├── 📄 package.json (30 linhas)
+└── 📄 README.txt (314 linhas)
+
+═══════════════════════════════════════════════════════════════
+
+PADRÕES
+
+## Stack
+- Backend: Node.js
+- Frontend: HTML/CSS/JS
+- Banco: PostgreSQL
+
+## Regras importantes
+- Controllers não acessam banco diretamente
+- Services concentram regra de negócio
+- Nada de lógica no frontend
+
+## Padrões
+- Nomes em camelCase
+- Pastas em inglês
+- Variáveis em inglês
+- Sem emoji nos códigos
+
+💡 COMO USAR ESTE CONTEXTO COM O CLAUDE:
+
+1️⃣ Copie TODO este arquivo (CONTEXT.txt)
+2️⃣ Cole no início da conversa com o Claude
+3️⃣ Diga: "Este é o contexto do meu projeto. Vamos trabalhar nele."
+
+Pronto! O Claude terá visão completa do projeto! ✅
+
+═══════════════════════════════════════════════════════════════

@@ -20,7 +20,6 @@ async function carregarClientes(page = 1, search = '') {
     currentPage = page;
     searchTerm = search;
 
-    // Mostrar loading
     const tbody = document.getElementById('clients-tbody');
     tbody.innerHTML = `
       <tr>
@@ -31,7 +30,6 @@ async function carregarClientes(page = 1, search = '') {
       </tr>
     `;
 
-    // Buscar clientes da API
     let endpoint = `/clientes?page=${page}&limit=${itemsPerPage}`;
     if (search) {
       endpoint += `&search=${encodeURIComponent(search)}`;
@@ -39,15 +37,13 @@ async function carregarClientes(page = 1, search = '') {
 
     const response = await api.get(endpoint);
 
-    // Verificar se a resposta é válida
     if (response && response.success) {
       const data = response.data || [];
       const pagination = response.pagination || {
         page: 1,
         limit: itemsPerPage,
         total: 0,
-        pages: 1,
-        data: []
+        pages: 1
       };
 
       if (data.length === 0) {
@@ -85,6 +81,24 @@ function renderizarTabela(clientes) {
 
   clientes.forEach(cliente => {
     const row = document.createElement('tr');
+    
+    // Determinar texto e classe da situação
+    let situacaoTexto = 'ATIVO';
+    let situacaoClasse = 'ativo';
+    
+    if (cliente.situacao) {
+      if (cliente.situacao === 'ativo') {
+        situacaoTexto = 'ATIVO';
+        situacaoClasse = 'ativo';
+      } else if (cliente.situacao === 'em_risco') {
+        situacaoTexto = 'EM RISCO';
+        situacaoClasse = 'em-risco';
+      } else if (cliente.situacao === 'inativo') {
+        situacaoTexto = 'INATIVO';
+        situacaoClasse = 'inativo';
+      }
+    }
+    
     row.innerHTML = `
       <td>${cliente.id}</td>
       <td>${cliente.nome}</td>
@@ -92,8 +106,8 @@ function renderizarTabela(clientes) {
       <td>${cliente.telefone || '-'}</td>
       <td>${cliente.email?.replace('@instagram.com', '') || '-'}</td>
       <td>
-        <span class="situacao-badge situacao-${cliente.situacao || 'ativo'}">
-          ${cliente.situacao || 'Ativo'}
+        <span class="situacao-badge situacao-${situacaoClasse}">
+          ${situacaoTexto}
         </span>
       </td>
       <td>
@@ -133,7 +147,7 @@ function renderizarPaginacao(pagination) {
   btnPrev.onclick = () => carregarClientes(currentPage - 1, searchTerm);
   controls.appendChild(btnPrev);
 
-  // Botões de páginas
+  // Lógica de páginas
   const maxButtons = 5;
   let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
   let endPage = Math.min(totalPages, startPage + maxButtons - 1);
@@ -142,11 +156,44 @@ function renderizarPaginacao(pagination) {
     startPage = Math.max(1, endPage - maxButtons + 1);
   }
 
+  // Primeira página
+  if (startPage > 1) {
+    const btn = document.createElement('button');
+    btn.className = 'pagination-btn';
+    btn.textContent = '1';
+    btn.onclick = () => carregarClientes(1, searchTerm);
+    controls.appendChild(btn);
+
+    if (startPage > 2) {
+      const ellipsis = document.createElement('span');
+      ellipsis.className = 'pagination-ellipsis';
+      ellipsis.textContent = '...';
+      controls.appendChild(ellipsis);
+    }
+  }
+
+  // Páginas do meio
   for (let i = startPage; i <= endPage; i++) {
     const btn = document.createElement('button');
     btn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
     btn.textContent = i;
     btn.onclick = () => carregarClientes(i, searchTerm);
+    controls.appendChild(btn);
+  }
+
+  // Última página
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      const ellipsis = document.createElement('span');
+      ellipsis.className = 'pagination-ellipsis';
+      ellipsis.textContent = '...';
+      controls.appendChild(ellipsis);
+    }
+
+    const btn = document.createElement('button');
+    btn.className = 'pagination-btn';
+    btn.textContent = totalPages;
+    btn.onclick = () => carregarClientes(totalPages, searchTerm);
     controls.appendChild(btn);
   }
 
@@ -224,12 +271,9 @@ function formatarTelefone(telefone) {
   return telefone;
 }
 
-// ===================================================================
-// 🎯 FUNÇÃO 1: VISUALIZAR CLIENTE (MODAL)
-// ===================================================================
+// === VISUALIZAR CLIENTE (MODAL) ===
 async function visualizarCliente(id) {
   try {
-    // Buscar dados do cliente
     const response = await api.get(`/clientes/${id}`);
     
     if (!response.success || !response.data) {
@@ -237,19 +281,15 @@ async function visualizarCliente(id) {
     }
 
     const cliente = response.data;
-    
-    // Criar modal
     const modal = criarModalVisualizacao(cliente);
     document.body.appendChild(modal);
     
-    // Adicionar evento para fechar
     modal.addEventListener('click', (e) => {
       if (e.target === modal || e.target.classList.contains('modal-close-btn')) {
         fecharModal(modal);
       }
     });
 
-    // Focar no modal
     setTimeout(() => modal.classList.add('active'), 10);
 
   } catch (error) {
@@ -258,7 +298,6 @@ async function visualizarCliente(id) {
   }
 }
 
-// Criar HTML do modal de visualização
 function criarModalVisualizacao(cliente) {
   const modal = document.createElement('div');
   modal.className = 'modal-overlay';
@@ -270,7 +309,6 @@ function criarModalVisualizacao(cliente) {
       </div>
       
       <div class="modal-body">
-        <!-- Informações Principais -->
         <div class="info-section">
           <h3 class="info-section-title">Informações Principais</h3>
           <div class="info-grid">
@@ -286,16 +324,15 @@ function criarModalVisualizacao(cliente) {
               <span class="info-label">CPF:</span>
               <span class="info-value">${formatarCPF(cliente.cpf)}</span>
             </div>
-            <div class="info-item">
-              <span class="info-label">Situação:</span>
-              <span class="situacao-badge situacao-${cliente.situacao || 'ativo'}">
-                ${cliente.situacao || 'Ativo'}
-              </span>
-            </div>
+          <div class="info-item">
+            <span class="info-label">Situação:</span>
+            <span class="situacao-badge situacao-${cliente.situacao === 'em_risco' ? 'em-risco' : cliente.situacao || 'ativo'}">
+              ${cliente.situacao === 'ativo' ? 'ATIVO' : cliente.situacao === 'em_risco' ? 'EM RISCO' : cliente.situacao === 'inativo' ? 'INATIVO' : 'ATIVO'}
+            </span>
+          </div>
           </div>
         </div>
 
-        <!-- Contatos -->
         <div class="info-section">
           <h3 class="info-section-title">Contatos</h3>
           <div class="info-grid">
@@ -314,7 +351,6 @@ function criarModalVisualizacao(cliente) {
           </div>
         </div>
 
-        <!-- Endereço -->
         <div class="info-section">
           <h3 class="info-section-title">Endereço</h3>
           <div class="info-grid">
@@ -337,7 +373,6 @@ function criarModalVisualizacao(cliente) {
           </div>
         </div>
 
-        <!-- Informações Adicionais -->
         ${cliente.observacoes ? `
         <div class="info-section">
           <h3 class="info-section-title">Observações</h3>
@@ -345,7 +380,6 @@ function criarModalVisualizacao(cliente) {
         </div>
         ` : ''}
 
-        <!-- Datas -->
         <div class="info-section">
           <h3 class="info-section-title">Registros</h3>
           <div class="info-grid">
@@ -362,7 +396,7 @@ function criarModalVisualizacao(cliente) {
       </div>
 
       <div class="modal-footer">
-        <button class="btn-modal-edit" onclick="fecharModalEEditar(${cliente.id})">
+        <button class="btn-modal-edit" onclick="editarClienteDoModal(${cliente.id})">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
             <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -377,7 +411,6 @@ function criarModalVisualizacao(cliente) {
   return modal;
 }
 
-// Formatar data
 function formatarData(dataString) {
   if (!dataString) return '-';
   const data = new Date(dataString);
@@ -390,30 +423,24 @@ function formatarData(dataString) {
   });
 }
 
-// Fechar modal com animação
 function fecharModal(modal) {
   modal.classList.remove('active');
   setTimeout(() => modal.remove(), 300);
 }
 
-// Fechar modal e ir para edição
-function fecharModalEEditar(id) {
+// 🔧 CORRIGIDO: Editar do modal agora funciona
+function editarClienteDoModal(id) {
   const modal = document.querySelector('.modal-overlay');
   if (modal) fecharModal(modal);
   setTimeout(() => editarCliente(id), 100);
 }
 
-// ===================================================================
-// 🎯 FUNÇÃO 2: EDITAR CLIENTE
-// ===================================================================
+// 🔧 CORRIGIDO: Editar cliente agora redireciona com parâmetro correto
 function editarCliente(id) {
-  // Redirecionar para a página de cadastro com parâmetro de edição
   window.location.href = `cadastrar-cliente.html?edit=${id}`;
 }
 
-// ===================================================================
-// 🎯 FUNÇÃO 3: DELETAR CLIENTE (já existente - mantida)
-// ===================================================================
+// === DELETAR CLIENTE ===
 async function deletarCliente(id, nome) {
   if (!confirm(`Tem certeza que deseja deletar o cliente "${nome}"?`)) return;
 

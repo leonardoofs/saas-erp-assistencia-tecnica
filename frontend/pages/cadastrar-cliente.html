@@ -221,9 +221,11 @@
                     </select>
                   </div>
 
-                  <div class="form-group grid-span-2">
+                  <div class="form-group grid-span-3">
                     <label class="form-label">Responsável pelo cadastro *</label>
-                    <input type="text" class="form-input" name="responsavel" placeholder="Nome do responsável" required>
+                    <select class="form-input" name="responsavel" required>
+                      <!-- Será preenchido automaticamente via JavaScript -->
+                    </select>
                   </div>
                 </div>
               </div>
@@ -292,7 +294,18 @@
               </tbody>
             </table>
             <div class="table-footer">
-              Mostrando <span id="total-clients">0</span> no total de <span id="total-clients-db">0</span>
+              <div class="footer-info">
+                Mostrando <span id="total-clients">0</span> no total de <span id="total-clients-db">0</span>
+              </div>
+              <button class="btn-ver-clientes" onclick="window.location.href='listar-clientes.html'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Ver Todos os Clientes
+              </button>
             </div>
           </div>
         </section>

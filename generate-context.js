@@ -128,9 +128,9 @@ Pronto! O Claude terá visão completa do projeto! ✅
 ═══════════════════════════════════════════════════════════════
 `;
 
-  fs.writeFileSync('CONTEXT.txt', output, 'utf8');
+  fs.writeFileSync('CONTEXT-JS.txt', output, 'utf8');
   
-  console.log('✅ Arquivo CONTEXT.txt gerado com sucesso!');
+  console.log('✅ Arquivo CONTEXT-JS.txt gerado com sucesso!');
   console.log(`📊 ${stats.totalFiles} arquivos escaneados`);
   console.log(`📝 ${stats.totalLines.toLocaleString('pt-BR')} linhas de código\n`);
 }

@@ -1,0 +1,852 @@
+Author: Leonardo de Oliveira <leonardodeoliveira.fs@gmail.com>
+
+    fix: ajustes no CSS
+
+diff --git a/CONTEXT.txt b/CONTEXT.txt
+new file mode 100644
+index 0000000..3712c95
+--- /dev/null
++++ b/CONTEXT.txt
+@@ -0,0 +1,83 @@
++
++╔═══════════════════════════════════════════════════════════════╗
++║           📋 CONTEXTO DO PROJETO UNDERTECH                     ║
++║                 Gerado em: 13/01/2026, 22:14:21          ║
++╚═══════════════════════════════════════════════════════════════╝
++
++📊 ESTATÍSTICAS DO PROJETO
++━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++📦 Total de arquivos: 41
++📁 Total de pastas: 12
++📄 Arquivos HTML: 6
++🎨 Arquivos CSS: 9
++⚙️  Arquivos JavaScript: 22
++📝 Total de linhas de código: 7.554
++
++📂 ESTRUTURA DE PASTAS E ARQUIVOS
++━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++undertech/
++├── 📁 backend/
++│   ├── 📄 server.js (83 linhas)
++│   └── 📁 src/
++│       ├── 📁 config/
++│       │   ├── 📄 database.js (160 linhas)
++│       │   └── 📄 jwt.js (35 linhas)
++│       ├── 📁 controllers/
++│       │   ├── 📄 authController.js (154 linhas)
++│       │   ├── 📄 clientesController.js (235 linhas)
++│       │   ├── 📄 dashboardController.js (133 linhas)
++│       │   ├── 📄 ordensController.js (260 linhas)
++│       │   └── 📄 reformasController.js (258 linhas)
++│       ├── 📁 middlewares/
++│       │   └── 📄 authMiddleware.js (74 linhas)
++│       └── 📁 routes/
++│           ├── 📄 auth.js (13 linhas)
++│           ├── 📄 clientes.js (16 linhas)
++│           ├── 📄 dashboard-routes.js (13 linhas)
++│           ├── 📄 ordens.js (16 linhas)
++│           └── 📄 reformas.js (16 linhas)
++├── 📄 env.sh (13 linhas)
++├── 📁 frontend/
++│   ├── 📁 assets/
++│   │   ├── 📁 css/
++│   │   │   ├── 📄 cadastrar-cliente.css (343 linhas)
++│   │   │   ├── 📄 components.css (210 linhas)
++│   │   │   ├── 📄 dashboard.css (376 linhas)
++│   │   │   ├── 📄 layout.css (213 linhas)
++│   │   │   ├── 📄 listar-clientes.css (494 linhas)
++│   │   │   ├── 📄 reset.css (128 linhas)
++│   │   │   ├── 📄 search-mode.css (330 linhas)
++│   │   │   ├── 📄 sidebar-dropdown.css (121 linhas)
++│   │   │   └── 📄 variables.css (112 linhas)
++│   │   ├── 📁 img/
++│   │   └── 📁 js/
++│   │       ├── 📄 api.js (172 linhas)
++│   │       ├── 📄 auth.js (101 linhas)
++│   │       ├── 📄 cadastrar-cliente.js (396 linhas)
++│   │       ├── 📄 dashboard.js (433 linhas)
++│   │       ├── 📄 listar-clientes.js (451 linhas)
++│   │       ├── 📄 sidebar.js (119 linhas)
++│   │       └── 📄 utils.js (173 linhas)
++│   ├── 📄 index.html (20 linhas)
++│   └── 📁 pages/
++│       ├── 📄 cadastrar-cliente.html (310 linhas)
++│       ├── 📄 dashboard.html (384 linhas)
++│       ├── 📄 listar-clientes.html (217 linhas)
++│       ├── 📄 login.html (179 linhas)
++│       └── 📄 teste-api.html (295 linhas)
++├── 📄 generate-context.js (121 linhas)
++├── 📄 gitignore.sh (33 linhas)
++├── 📄 package.json (30 linhas)
++└── 📄 README.txt (314 linhas)
++
++═══════════════════════════════════════════════════════════════
++
++💡 COMO USAR ESTE CONTEXTO COM O CLAUDE:
++
++1️⃣ Copie TODO este arquivo (CONTEXT.txt)
++2️⃣ Cole no início da conversa com o Claude
++3️⃣ Diga: "Este é o contexto do meu projeto. Vamos trabalhar nele."
++
++Pronto! O Claude terá visão completa do projeto! ✅
++
++═══════════════════════════════════════════════════════════════
+diff --git a/frontend/assets/css/cadastrar-cliente.css b/frontend/assets/css/cad
+astrar-cliente.css
+index 459beb7..6031494 100644
+--- a/frontend/assets/css/cadastrar-cliente.css
++++ b/frontend/assets/css/cadastrar-cliente.css
+@@ -41,7 +41,6 @@
+   padding: 0;
+   position: relative;
+   padding-bottom: 3px;
+-  margin-bottom: var(--spacing-lg);
+ }
+
+ .form-tabs::after {
+@@ -119,10 +118,12 @@
+ /* === CONTAINER DO FORMULÁRIO === */
+ .form-container {
+   background-color: var(--white);
+-  border-bottom: var(--border-default);
+-  border-right: var(--border-default);
+-  border-left: var(--border-default);
++  /* border-bottom: var(--border-default); */
++  /* border-right: var(--border-default); */
++  /* border-left: var(--border-default); */
+   padding: var(--spacing-xl);
++  /* border: 1px solid var(--dark-orange); */
++  border-radius: 0px 0px 8px 8px;
+ }
+
+ .form-section {
+@@ -136,7 +137,7 @@
+ /* === GRID DE CAMPOS === */
+ .form-grid {
+   display: grid;
+-  grid-template-columns: repeat(2, 1fr);
++  grid-template-columns: repeat(3, 1fr);
+   gap: var(--spacing-md);
+   margin-bottom: var(--spacing-lg);
+ }
+@@ -149,7 +150,7 @@
+   grid-column: 1 / -1;
+ }
+
+-.form-group.grid-span-2 {
++.form-group.grid-span-3 {
+   grid-column: span 2;
+ }
+
+@@ -246,17 +247,16 @@ select.form-input {
+ /* === TABELA DE ÚLTIMOS CADASTROS === */
+ .recent-registrations {
+   margin-top: var(--spacing-xl);
+-  background-color: var(--medium-gray);
+-  border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+ }
+
+ .recent-registrations-header {
+-  background-color: var(--medium-gray);
++  background-color: var(--dark-bg);
+   color: var(--white);
+   padding: var(--spacing-md) var(--spacing-lg);
+   font-family: var(--font-heading);
+   font-size: var(--font-size-lg);
+   font-weight: var(--font-weight-bold);
++  border-radius: 8px 8px 0px 0px;
+ }
+
+ .recent-registrations-table {
+diff --git a/frontend/assets/css/listar-clientes.css b/frontend/assets/css/lista
+r-clientes.css
+index 1a6b7c1..abcc0d8 100644
+--- a/frontend/assets/css/listar-clientes.css
++++ b/frontend/assets/css/listar-clientes.css
+@@ -70,7 +70,7 @@
+ /* === CONTAINER DA TABELA === */
+ .table-container {
+   background-color: var(--white);
+-  border-radius: var(--border-radius-md);
++  border-radius: 8px 8px 0px 0px;
+   overflow: hidden;
+   box-shadow: var(--shadow-sm);
+ }
+@@ -157,8 +157,7 @@
+   align-items: center;
+   padding: var(--spacing-lg);
+   background-color: var(--white);
+-  border-radius: var(--border-radius-md);
+-  margin-top: var(--spacing-md);
++  border-radius: 0px 0px 8px 8px;
+   box-shadow: var(--shadow-sm);
+ }
+
+@@ -242,6 +241,193 @@
+   margin-bottom: var(--spacing-md);
+ }
+
++/* === MODAL OVERLAY === */
++.modal-overlay {
++  position: fixed;
++  top: 0;
++  left: 0;
++  width: 100%;
++  height: 100%;
++  background-color: rgba(0, 0, 0, 0.7);
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  z-index: 1000;
++  opacity: 0;
++  transition: opacity 0.3s ease;
++  padding: 20px;
++}
++
++.modal-overlay.active {
++  opacity: 1;
++}
++
++/* === MODAL CONTENT === */
++.modal-content {
++  background-color: var(--white);
++  border-radius: var(--border-radius-lg);
++  width: 100%;
++  max-width: 800px;
++  max-height: 90vh;
++  overflow-y: auto;
++  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
++  transform: translateY(-20px);
++  transition: transform 0.3s ease;
++}
++
++.modal-overlay.active .modal-content {
++  transform: translateY(0);
++}
++
++/* === MODAL HEADER === */
++.modal-header {
++  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--dark-oran
+ge) 100%);
++  color: var(--white);
++  padding: var(--spacing-lg);
++  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
++  display: flex;
++  justify-content: space-between;
++  align-items: center;
++}
++
++.modal-title {
++  font-family: var(--font-heading);
++  font-size: var(--font-size-xl);
++  font-weight: var(--font-weight-bold);
++  margin: 0;
++}
++
++.modal-close-btn {
++  background: none;
++  border: none;
++  color: var(--white);
++  font-size: 32px;
++  cursor: pointer;
++  line-height: 1;
++  padding: 0;
++  width: 32px;
++  height: 32px;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  border-radius: 50%;
++  transition: background-color var(--transition-fast);
++}
++
++.modal-close-btn:hover {
++  background-color: rgba(255, 255, 255, 0.2);
++}
++
++/* === MODAL BODY === */
++.modal-body {
++  padding: var(--spacing-xl);
++}
++
++/* === INFO SECTIONS === */
++.info-section {
++  margin-bottom: var(--spacing-xl);
++}
++
++.info-section:last-child {
++  margin-bottom: 0;
++}
++
++.info-section-title {
++  font-family: var(--font-heading);
++  font-size: var(--font-size-lg);
++  font-weight: var(--font-weight-bold);
++  color: var(--primary-orange);
++  margin-bottom: var(--spacing-md);
++  padding-bottom: var(--spacing-xs);
++  border-bottom: 2px solid var(--light-gray);
++}
++
++/* === INFO GRID === */
++.info-grid {
++  display: grid;
++  grid-template-columns: repeat(2, 1fr);
++  gap: var(--spacing-md);
++}
++
++.info-item {
++  display: flex;
++  flex-direction: column;
++  gap: var(--spacing-xs);
++}
++
++.info-item.full-width {
++  grid-column: 1 / -1;
++}
++
++.info-label {
++  font-size: var(--font-size-sm);
++  font-weight: var(--font-weight-bold);
++  color: var(--text-secondary);
++  text-transform: uppercase;
++  letter-spacing: 0.5px;
++}
++
++.info-value {
++  font-size: var(--font-size-md);
++  color: var(--text-primary);
++  font-weight: var(--font-weight-medium);
++}
++
++.info-observacoes {
++  font-size: var(--font-size-md);
++  color: var(--text-primary);
++  line-height: 1.6;
++  padding: var(--spacing-md);
++  background-color: #f9f9f9;
++  border-radius: var(--border-radius-md);
++  border-left: 4px solid var(--primary-orange);
++}
++
++/* === MODAL FOOTER === */
++.modal-footer {
++  padding: var(--spacing-lg);
++  border-top: 1px solid var(--light-gray);
++  display: flex;
++  justify-content: flex-end;
++  gap: var(--spacing-md);
++}
++
++.btn-modal-edit {
++  display: flex;
++  align-items: center;
++  gap: var(--spacing-xs);
++  padding: var(--spacing-sm) var(--spacing-lg);
++  background: linear-gradient(135deg, var(--primary-orange) 0%, var(--dark-oran
+ge) 100%);
++  color: var(--white);
++  border: none;
++  border-radius: var(--border-radius-md);
++  font-weight: var(--font-weight-bold);
++  font-size: var(--font-size-md);
++  cursor: pointer;
++  transition: all var(--transition-fast);
++}
++
++.btn-modal-edit:hover {
++  transform: translateY(-2px);
++  box-shadow: var(--shadow-md);
++}
++
++.btn-modal-close {
++  padding: var(--spacing-sm) var(--spacing-lg);
++  background-color: var(--medium-gray);
++  color: var(--white);
++  border: none;
++  border-radius: var(--border-radius-md);
++  font-weight: var(--font-weight-bold);
++  font-size: var(--font-size-md);
++  cursor: pointer;
++  transition: all var(--transition-fast);
++}
++
++.btn-modal-close:hover {
++  background-color: var(--dark-bg);
++}
++
+ /* === RESPONSIVIDADE === */
+ @media (max-width: 768px) {
+   .filter-bar {
+@@ -271,4 +457,37 @@
+     flex-wrap: wrap;
+     justify-content: center;
+   }
++}
++
++@media (max-width: 768px) {
++  .modal-content {
++    max-width: 95%;
++    max-height: 95vh;
++  }
++
++  .modal-header {
++    padding: var(--spacing-md);
++  }
++
++  .modal-title {
++    font-size: var(--font-size-lg);
++  }
++
++  .modal-body {
++    padding: var(--spacing-md);
++  }
++
++  .info-grid {
++    grid-template-columns: 1fr;
++  }
++
++  .modal-footer {
++    flex-direction: column;
++  }
++
++  .btn-modal-edit,
++  .btn-modal-close {
++    width: 100%;
++    justify-content: center;
++  }
+ }
+\ No newline at end of file
+diff --git a/frontend/assets/css/search-mode.css b/frontend/assets/css/search-mo
+de.css
+index d9f72f1..1427cab 100644
+--- a/frontend/assets/css/search-mode.css
++++ b/frontend/assets/css/search-mode.css
+@@ -6,13 +6,13 @@
+ /* === CONTAINER DE PESQUISA === */
+ .search-container {
+   background-color: var(--white);
+-  border-bottom: var(--border-default);
+-  border-right: var(--border-default);
+-  border-left: var(--border-default);
++  /* border-bottom: var(--border-default); */
++  /* border-right: var(--border-default); */
++  /* border-left: var(--border-default); */
+   padding: var(--spacing-lg);
+   display: none; /* Oculto por padrão */
+   border-radius: 0px 0px 8px 8px;
+-  border-color: var(--dark-orange);
++  /* border-color: var(--dark-orange); */
+ }
+
+ .search-container.active {
+diff --git a/frontend/assets/js/listar-clientes.js b/frontend/assets/js/listar-c
+lientes.js
+index b41090d..b4af964 100644
+--- a/frontend/assets/js/listar-clientes.js
++++ b/frontend/assets/js/listar-clientes.js
+@@ -58,7 +58,6 @@ async function carregarClientes(page = 1, search = '') {
+         atualizarInfo(pagination, data.length);
+       }
+     } else {
+-      // Se não houver dados ou sucesso for false
+       mostrarEstadoVazio(search);
+     }
+   } catch (error) {
+@@ -73,7 +72,6 @@ async function carregarClientes(page = 1, search = '') {
+       </tr>
+     `;
+
+-    // Resetar informações
+     document.getElementById('showing-count').textContent = '0';
+     document.getElementById('total-count').textContent = '0';
+     document.getElementById('pagination-controls').innerHTML = '';
+@@ -125,7 +123,6 @@ function renderizarPaginacao(pagination) {
+   const controls = document.getElementById('pagination-controls');
+   controls.innerHTML = '';
+
+-  // Se só tiver 1 página, não mostrar paginação
+   if (totalPages <= 1) return;
+
+   // Botão Anterior
+@@ -215,16 +212,208 @@ function formatarCPF(cpf) {
+   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+ }
+
+-// === AÇÕES ===
+-function visualizarCliente(id) {
+-  utils.showToast('Visualização em desenvolvimento', 'info');
+-  // TODO: Abrir modal com detalhes do cliente
++function formatarTelefone(telefone) {
++  if (!telefone) return '-';
++  const cleaned = telefone.replace(/\D/g, '');
++  if (cleaned.length === 11) {
++    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
++  }
++  if (cleaned.length === 10) {
++    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
++  }
++  return telefone;
++}
++
++// ===================================================================
++// 🎯 FUNÇÃO 1: VISUALIZAR CLIENTE (MODAL)
++// ===================================================================
++async function visualizarCliente(id) {
++  try {
++    // Buscar dados do cliente
++    const response = await api.get(`/clientes/${id}`);
++
++    if (!response.success || !response.data) {
++      throw new Error('Cliente não encontrado');
++    }
++
++    const cliente = response.data;
++
++    // Criar modal
++    const modal = criarModalVisualizacao(cliente);
++    document.body.appendChild(modal);
++
++    // Adicionar evento para fechar
++    modal.addEventListener('click', (e) => {
++      if (e.target === modal || e.target.classList.contains('modal-close-btn'))
+ {
++        fecharModal(modal);
++      }
++    });
++
++    // Focar no modal
++    setTimeout(() => modal.classList.add('active'), 10);
++
++  } catch (error) {
++    console.error('Erro ao visualizar cliente:', error);
++    utils.showToast(error.message || 'Erro ao carregar dados do cliente', 'erro
+r');
++  }
++}
++
++// Criar HTML do modal de visualização
++function criarModalVisualizacao(cliente) {
++  const modal = document.createElement('div');
++  modal.className = 'modal-overlay';
++  modal.innerHTML = `
++    <div class="modal-content">
++      <div class="modal-header">
++        <h2 class="modal-title">📋 Detalhes do Cliente</h2>
++        <button class="modal-close-btn">&times;</button>
++      </div>
++
++      <div class="modal-body">
++        <!-- Informações Principais -->
++        <div class="info-section">
++          <h3 class="info-section-title">Informações Principais</h3>
++          <div class="info-grid">
++            <div class="info-item">
++              <span class="info-label">ID:</span>
++              <span class="info-value">#${cliente.id}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Nome:</span>
++              <span class="info-value">${cliente.nome}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">CPF:</span>
++              <span class="info-value">${formatarCPF(cliente.cpf)}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Situação:</span>
++              <span class="situacao-badge situacao-${cliente.situacao || 'ativo
+'}">
++                ${cliente.situacao || 'Ativo'}
++              </span>
++            </div>
++          </div>
++        </div>
++
++        <!-- Contatos -->
++        <div class="info-section">
++          <h3 class="info-section-title">Contatos</h3>
++          <div class="info-grid">
++            <div class="info-item">
++              <span class="info-label">Telefone:</span>
++              <span class="info-value">${formatarTelefone(cliente.telefone)}</s
+pan>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Telefone Contato:</span>
++              <span class="info-value">${formatarTelefone(cliente.telefone_cont
+ato) || '-'}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Instagram:</span>
++              <span class="info-value">${cliente.email?.replace('@instagram.com
+', '') || '-'}</span>
++            </div>
++          </div>
++        </div>
++
++        <!-- Endereço -->
++        <div class="info-section">
++          <h3 class="info-section-title">Endereço</h3>
++          <div class="info-grid">
++            <div class="info-item full-width">
++              <span class="info-label">Rua:</span>
++              <span class="info-value">${cliente.endereco || '-'}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Cidade:</span>
++              <span class="info-value">${cliente.cidade || '-'}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Estado:</span>
++              <span class="info-value">${cliente.estado || '-'}</span>
++            </div>
++            <div class="info-item">
++              <span class="info-label">CEP:</span>
++              <span class="info-value">${cliente.cep || '-'}</span>
++            </div>
++          </div>
++        </div>
++
++        <!-- Informações Adicionais -->
++        ${cliente.observacoes ? `
++        <div class="info-section">
++          <h3 class="info-section-title">Observações</h3>
++          <p class="info-observacoes">${cliente.observacoes}</p>
++        </div>
++        ` : ''}
++
++        <!-- Datas -->
++        <div class="info-section">
++          <h3 class="info-section-title">Registros</h3>
++          <div class="info-grid">
++            <div class="info-item">
++              <span class="info-label">Cadastrado em:</span>
++              <span class="info-value">${formatarData(cliente.created_at)}</spa
+n>
++            </div>
++            <div class="info-item">
++              <span class="info-label">Última atualização:</span>
++              <span class="info-value">${formatarData(cliente.updated_at)}</spa
+n>
++            </div>
++          </div>
++        </div>
++      </div>
++
++      <div class="modal-footer">
++        <button class="btn-modal-edit" onclick="fecharModalEEditar(${cliente.id
+})">
++          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBo
+x="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
++            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7
+"></path>
++            <path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></pat
+h>
++          </svg>
++          Editar
++        </button>
++        <button class="btn-modal-close modal-close-btn">Fechar</button>
++      </div>
++    </div>
++  `;
++
++  return modal;
++}
++
++// Formatar data
++function formatarData(dataString) {
++  if (!dataString) return '-';
++  const data = new Date(dataString);
++  return data.toLocaleDateString('pt-BR', {
++    day: '2-digit',
++    month: '2-digit',
++    year: 'numeric',
++    hour: '2-digit',
++    minute: '2-digit'
++  });
++}
++
++// Fechar modal com animação
++function fecharModal(modal) {
++  modal.classList.remove('active');
++  setTimeout(() => modal.remove(), 300);
++}
++
++// Fechar modal e ir para edição
++function fecharModalEEditar(id) {
++  const modal = document.querySelector('.modal-overlay');
++  if (modal) fecharModal(modal);
++  setTimeout(() => editarCliente(id), 100);
+ }
+
++// ===================================================================
++// 🎯 FUNÇÃO 2: EDITAR CLIENTE
++// ===================================================================
+ function editarCliente(id) {
++  // Redirecionar para a página de cadastro com parâmetro de edição
+   window.location.href = `cadastrar-cliente.html?edit=${id}`;
+ }
+
++// ===================================================================
++// 🎯 FUNÇÃO 3: DELETAR CLIENTE (já existente - mantida)
++// ===================================================================
+ async function deletarCliente(id, nome) {
+   if (!confirm(`Tem certeza que deseja deletar o cliente "${nome}"?`)) return;
+
+@@ -245,7 +434,7 @@ searchInput.addEventListener('input', (e) => {
+   clearTimeout(searchTimeout);
+   searchTimeout = setTimeout(() => {
+     carregarClientes(1, e.target.value);
+-  }, 500); // Debounce de 500ms
++  }, 500);
+ });
+
+ // === LOGOUT ===
+diff --git a/generate-context.js b/generate-context.js
+new file mode 100644
+index 0000000..93265b9
+--- /dev/null
++++ b/generate-context.js
+@@ -0,0 +1,139 @@
++/**
++ * UnderTech - Gerador de Contexto do Projeto
++ *
++ * Execute: node generate-context.js
++ *
++ * Este script gera um arquivo CONTEXT.txt com:
++ * - Estrutura de pastas
++ * - Lista de arquivos
++ * - Estatísticas do projeto
++ */
++
++const fs = require('fs');
++const path = require('path');
++
++const IGNORE_FOLDERS = ['node_modules', '.git', 'database', 'dist', 'build'];
++const IGNORE_FILES = ['.DS_Store', 'package-lock.json', '.gitignore'];
++
++let stats = {
++  totalFiles: 0,
++  totalFolders: 0,
++  htmlFiles: 0,
++  cssFiles: 0,
++  jsFiles: 0,
++  totalLines: 0
++};
++
++function shouldIgnore(name) {
++  return IGNORE_FOLDERS.includes(name) || IGNORE_FILES.includes(name);
++}
++
++function countLines(filePath) {
++  try {
++    const content = fs.readFileSync(filePath, 'utf8');
++    return content.split('\n').length;
++  } catch (e) {
++    return 0;
++  }
++}
++
++function scanDirectory(dir, prefix = '', output = []) {
++  const items = fs.readdirSync(dir, { withFileTypes: true });
++
++  items.forEach((item, index) => {
++    if (shouldIgnore(item.name)) return;
++
++    const isLast = index === items.length - 1;
++    const connector = isLast ? '└──' : '├──';
++    const fullPath = path.join(dir, item.name);
++
++    if (item.isDirectory()) {
++      stats.totalFolders++;
++      output.push(`${prefix}${connector} 📁 ${item.name}/`);
++      const newPrefix = prefix + (isLast ? '    ' : '│   ');
++      scanDirectory(fullPath, newPrefix, output);
++    } else {
++      stats.totalFiles++;
++
++      // Contar por tipo
++      const ext = path.extname(item.name).toLowerCase();
++      if (ext === '.html') stats.htmlFiles++;
++      if (ext === '.css') stats.cssFiles++;
++      if (ext === '.js') stats.jsFiles++;
++
++      // Contar linhas
++      const lines = countLines(fullPath);
++      stats.totalLines += lines;
++
++      output.push(`${prefix}${connector} 📄 ${item.name} (${lines} linhas)`);
++    }
++  });
++
++  return output;
++}
++
++function generateContext() {
++  console.log('🔍 Escaneando projeto...\n');
++
++  const structure = scanDirectory('.');
++
++  const output = `
++╔═══════════════════════════════════════════════════════════════╗
++║           📋 CONTEXTO DO PROJETO UNDERTECH                     ║
++║                 Gerado em: ${new Date().toLocaleString('pt-BR')}          ║
++╚═══════════════════════════════════════════════════════════════╝
++
++📊 ESTATÍSTICAS DO PROJETO
++━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++📦 Total de arquivos: ${stats.totalFiles}
++📁 Total de pastas: ${stats.totalFolders}
++📄 Arquivos HTML: ${stats.htmlFiles}
++🎨 Arquivos CSS: ${stats.cssFiles}
++⚙️ Arquivos JavaScript: ${stats.jsFiles}
++📝 Total de linhas de código: ${stats.totalLines.toLocaleString('pt-BR')}
++
++📂 ESTRUTURA DE PASTAS E ARQUIVOS
++━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
++undertech/
++${structure.join('\n')}
++
++═══════════════════════════════════════════════════════════════
++
++PADRÕES
++
++## Stack
++- Backend: Node.js
++- Frontend: HTML/CSS/JS
++- Banco: PostgreSQL
++
++## Regras importantes
++- Controllers não acessam banco diretamente
++- Services concentram regra de negócio
++- Nada de lógica no frontend
++
++## Padrões
++- Nomes em camelCase
++- Pastas em inglês
++- Variáveis em inglês
++- Sem emoji nos códigos
++
++💡 COMO USAR ESTE CONTEXTO COM O CLAUDE:
++
++1️⃣ Copie TODO este arquivo (CONTEXT.txt)
++2️⃣ Cole no início da conversa com o Claude
++3️⃣ Diga: "Este é o contexto do meu projeto. Vamos trabalhar nele."
++
++Pronto! O Claude terá visão completa do projeto! ✅
++
++═══════════════════════════════════════════════════════════════
++`;
++
++  fs.writeFileSync('CONTEXT.txt', output, 'utf8');
++
++  console.log('✅ Arquivo CONTEXT.txt gerado com sucesso!');
++  console.log(`📊 ${stats.totalFiles} arquivos escaneados`);
++  console.log(`📝 ${stats.totalLines.toLocaleString('pt-BR')} linhas de código\
+n`);
++}
++
++// Executar
++generateContext();
+\ No newline at end of file
