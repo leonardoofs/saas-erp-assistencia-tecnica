@@ -1,20 +1,352 @@
-PADRÕES
+# UnderTech - Padrões do Projeto
 
-## Stack
-- Backend: Node.js
-- Frontend: HTML/CSS/JS
-- Banco: PostgreSQL
+## 📚 Stack Tecnológica
 
-## Regras importantes
-- Controllers não acessam banco diretamente
-- Services concentram regra de negócio
-- Nada de lógica no frontend
+### EVITAR EMOJI NO SCRIPT ###
 
-## Padrões
-- Nomes em camelCase
-- Pastas em inglês
-- Variáveis em inglês
-- Sem emoji nos códigos
+### Backend
+- **Runtime**: Node.js v18+
+- **Framework**: Express.js
+- **Banco de Dados**: SQLite (dev) → PostgreSQL (prod)
+- **Autenticação**: JWT + bcryptjs
+- **Validação**: express-validator
 
-## MODIFICAÇÕES
-- Sempre me informar sobre todas as modificações incluse a adição de novas stacks no projeto.
+### Frontend
+- **Markup**: HTML5 Semântico
+- **Estilização**: CSS3 (Custom Properties, Grid, Flexbox)
+- **Script**: JavaScript ES6+ (Vanilla, sem frameworks)
+- **Fontes**: Google Fonts (Montserrat, Inter)
+
+### DevOps
+- **Controle de Versão**: Git
+- **Gerenciador de Pacotes**: npm
+- **Ambiente**: dotenv
+
+---
+
+## 🏗️ Arquitetura
+
+### Camadas de Responsabilidade
+
+```
+┌─────────────────────────────────────┐
+│         FRONTEND (HTML/CSS/JS)      │
+│  - Apenas apresentação e eventos    │
+│  - Sem lógica de negócio            │
+└──────────────┬──────────────────────┘
+               │ HTTP/REST
+┌──────────────▼──────────────────────┐
+│         ROUTES (Express)            │
+│  - Definição de endpoints           │
+│  - Aplicação de middlewares         │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│         CONTROLLERS                 │
+│  - Validação de entrada             │
+│  - Chamada aos Services             │
+│  - Formatação de resposta           │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│         SERVICES                    │
+│  - Regras de negócio                │
+│  - Cálculos e transformações        │
+│  - Chamada aos Repositories         │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│         REPOSITORIES                │
+│  - Acesso direto ao banco           │
+│  - Queries SQL                      │
+│  - Mapeamento objeto-relacional     │
+└─────────────────────────────────────┘
+```
+
+---
+
+## 📐 Padrões de Código
+
+### Nomenclatura
+
+| Tipo | Padrão | Exemplo |
+|------|--------|---------|
+| Variáveis/Funções | camelCase | `getUserById`, `totalClientes` |
+| Classes | PascalCase | `ClienteService`, `AuthMiddleware` |
+| Constantes | UPPER_SNAKE_CASE | `MAX_RETRY_ATTEMPTS` |
+| Arquivos | kebab-case | `cliente-service.js`, `auth-middleware.js` |
+| Pastas | lowercase inglês | `controllers`, `services`, `middlewares` |
+| Rotas | kebab-case | `/api/clientes`, `/api/ordens-servico` |
+
+### Idioma
+
+- **Código**: Inglês (funções, variáveis, classes)
+- **Domínio**: Português (entidades, campos do negócio)
+- **Comentários**: Português (documentação)
+
+```javascript
+// ❌ Evitar
+const getCliente = async (clienteId) => { ... }
+
+// ✅ Preferir
+const getClienteById = async (id) => { ... }
+```
+
+### Organização de Imports
+
+```javascript
+// 1. Dependências externas
+const express = require('express');
+const bcrypt = require('bcryptjs');
+
+// 2. Módulos internos do projeto
+const { ClienteService } = require('../services/clienteService');
+const { authMiddleware } = require('../middlewares/authMiddleware');
+
+// 3. Configurações e utilitários
+const { formatCPF } = require('../utils/formatters');
+```
+
+---
+
+## 🔒 Regras de Negócio
+
+### Separação de Responsabilidades
+
+1. **Controllers**: 
+   - Recebem requisição
+   - Validam formato básico
+   - Chamam Services
+   - Retornam resposta HTTP
+
+2. **Services**: 
+   - Contêm toda lógica de negócio
+   - Calculam situação de clientes
+   - Aplicam regras de validação complexas
+   - Orquestram chamadas a Repositories
+
+3. **Repositories**:
+   - Executam queries SQL
+   - Mapeiam resultados
+   - Tratam erros de banco
+
+### Exemplo Correto
+
+```javascript
+// ❌ ERRADO - Controller acessando banco
+const listarClientes = async (req, res) => {
+  const clientes = await db.query('SELECT * FROM clientes');
+  res.json(clientes);
+};
+
+// ✅ CORRETO - Usando camadas
+// Controller
+const listarClientes = async (req, res) => {
+  const clientes = await ClienteService.listar(req.query);
+  res.json({ success: true, data: clientes });
+};
+
+// Service
+class ClienteService {
+  static async listar(filters) {
+    const clientes = await ClienteRepository.findAll(filters);
+    return aplicarSituacaoEmClientes(clientes);
+  }
+}
+
+// Repository
+class ClienteRepository {
+  static async findAll(filters) {
+    return await db.query('SELECT * FROM clientes WHERE ...');
+  }
+}
+```
+
+---
+
+## 🎨 Padrões Frontend
+
+### Estrutura de Arquivos
+
+```
+frontend/
+├── assets/
+│   ├── css/
+│   │   ├── variables.css      # Tokens de design
+│   │   ├── reset.css          # Normalização
+│   │   ├── layout.css         # Estrutura global
+│   │   ├── components.css     # Componentes reutilizáveis
+│   │   └── [page].css         # Estilos específicos
+│   ├── js/
+│   │   ├── utils.js           # Funções auxiliares
+│   │   ├── api.js             # Cliente HTTP
+│   │   ├── auth.js            # Autenticação
+│   │   └── [page].js          # Lógica específica
+│   └── img/
+└── pages/
+    └── [page].html
+```
+
+### CSS
+
+- Usar **Custom Properties** para tokens de design
+- Evitar IDs para estilização (usar classes)
+- Nomenclatura BEM quando apropriado
+- Mobile-first responsivo
+
+```css
+/* ✅ Bom */
+.card-cliente { }
+.card-cliente__header { }
+.card-cliente--destaque { }
+
+/* ❌ Evitar */
+#cliente1 { }
+div.box { }
+```
+
+### JavaScript
+
+- Vanilla JS puro (sem jQuery/frameworks)
+- Classes para organização
+- Async/await para assincronismo
+- Event delegation quando possível
+
+```javascript
+// ✅ Bom
+class ClienteManager {
+  async carregarClientes() {
+    try {
+      const data = await api.get('/clientes');
+      this.renderizar(data);
+    } catch (error) {
+      utils.showToast(error.message, 'error');
+    }
+  }
+}
+
+// ❌ Evitar callbacks aninhados
+api.get('/clientes', function(data) {
+  renderizar(data, function(html) {
+    inserir(html, function() { ... });
+  });
+});
+```
+
+---
+
+## 🔐 Segurança
+
+### Obrigatório
+
+- ✅ Hash de senhas com bcrypt (10+ rounds)
+- ✅ Tokens JWT com expiração
+- ✅ Validação de entrada (express-validator)
+- ✅ Sanitização de dados
+- ✅ HTTPS em produção
+- ✅ Variáveis sensíveis em `.env`
+
+### Proibido
+
+- ❌ Senhas em plain text
+- ❌ SQL injection vulnerável
+- ❌ Tokens sem expiração
+- ❌ Credenciais no código
+- ❌ CORS aberto em produção
+
+---
+
+## 📝 Documentação
+
+### Comentários
+
+```javascript
+/**
+ * Calcula a situação do cliente baseado na última compra
+ * 
+ * @param {Date} ultimaCompra - Data da última compra
+ * @returns {string} "ativo" | "em_risco" | "inativo"
+ * 
+ * Regras:
+ * - ATIVO: até 90 dias
+ * - EM RISCO: 90-180 dias
+ * - INATIVO: 180+ dias
+ */
+const calcularSituacao = (ultimaCompra) => {
+  // implementação
+};
+```
+
+### Commits
+
+Padrão Conventional Commits:
+
+```
+feat: adiciona cadastro de clientes
+fix: corrige cálculo de situação
+refactor: extrai lógica para service
+docs: atualiza README
+style: formata código
+test: adiciona testes de validação
+chore: atualiza dependências
+```
+
+---
+
+## 🚀 Deployment
+
+### Checklist Pré-Deploy
+
+- [ ] Migrar de SQLite para PostgreSQL
+- [ ] Configurar variáveis de ambiente
+- [ ] Gerar JWT_SECRET seguro
+- [ ] Configurar CORS específico
+- [ ] Habilitar HTTPS
+- [ ] Configurar rate limiting
+- [ ] Revisar logs de erro
+- [ ] Backup do banco configurado
+
+---
+
+## 📊 Versionamento
+
+- **Semantic Versioning**: MAJOR.MINOR.PATCH
+- **Branches**: 
+  - `main` - produção
+  - `develop` - desenvolvimento
+  - `feature/nome` - funcionalidades
+  - `hotfix/nome` - correções urgentes
+
+---
+
+## 🔄 Processo de Modificação
+
+### Antes de Implementar
+
+1. ✅ Verificar se segue os padrões acima
+2. ✅ Confirmar separação de camadas
+3. ✅ Validar nomenclatura
+4. ✅ Documentar mudanças
+
+### Comunicação Obrigatória
+
+**Sempre informar sobre:**
+- Adição de novas dependências
+- Mudanças na estrutura de pastas
+- Alterações em regras de negócio
+- Modificações no banco de dados
+- Atualizações de segurança
+
+---
+
+## 📚 Referências
+
+- [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
+- [Clean Code JavaScript](https://github.com/ryanmcdermott/clean-code-javascript)
+- [Express.js Guide](https://expressjs.com/en/guide/routing.html)
+- [MDN Web Docs](https://developer.mozilla.org/)
+
+---
+
+**Última atualização**: Janeiro 2026
+**Versão do Documento**: 2.0

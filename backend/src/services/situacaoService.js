@@ -1,47 +1,46 @@
 /**
  * UnderTech - Serviço de Situação de Clientes
- * 
- * 
+ *
  * REGRAS DE NEGÓCIO:
- * - Sem compra há 90 dias = "Em Risco"
- * - Sem compra há 180 dias = "Inativo"
- * - Com compra recente = "Ativo"
+ * - 0-90 dias = "Ativo" (Cliente Quente)
+ * - 91-180 dias = "Em Risco" (Cliente Morno)
+ * - 181-360 dias = "Inativo" (Cliente Frio)
  */
 
 const { runQuery, allQuery } = require('../config/database');
 
 /**
  * Calcula a situação do cliente baseado na última compra
+ *
  * @param {Date|string} ultimaCompra - Data da última compra
- * @returns {string} - "ativo", "em_risco" ou "inativo"
+ * @returns {string} "novo", "ativo", "em_risco" ou "inativo"
  */
 const calcularSituacao = (ultimaCompra) => {
-  // Se não tem última compra, retorna null (não deveria acontecer)
   if (!ultimaCompra) {
-    return null;
+    return 'novo';         // Sem compra = Cliente Novo
   }
 
   const hoje = new Date();
   const dataUltimaCompra = new Date(ultimaCompra);
-  
-  // Calcular diferença em dias
+
   const diferencaMs = hoje - dataUltimaCompra;
   const diasSemComprar = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
 
-  // Lógica atualizada:
-  // ATIVO: até 90 dias
-  // EM RISCO: > 90 e <= 180 dias
-  // INATIVO: > 180 dias
-  
   if (diasSemComprar <= 90) {
-    return 'ativo';
+    return 'ativo';        // 0-90 dias = Cliente Quente
   } else if (diasSemComprar <= 180) {
-    return 'em_risco';
+    return 'em_risco';     // 91-180 dias = Cliente Morno
   } else {
-    return 'inativo';
+    return 'inativo';      // 181+ dias = Cliente Frio
   }
 };
 
+/**
+ * Aplica situação automática em array de clientes
+ * 
+ * @param {Array} clientes - Array de clientes
+ * @returns {Array} Clientes com situação calculada
+ */
 const aplicarSituacaoEmClientes = (clientes) => {
   return clientes.map(cliente => ({
     ...cliente,
@@ -57,7 +56,6 @@ const atualizarSituacaoTodosClientes = async () => {
   try {
     console.log('Iniciando atualização de situação dos clientes...');
 
-    // Buscar todos os clientes
     const clientes = await allQuery('SELECT id, ultima_compra, situacao FROM clientes');
 
     let atualizados = 0;
@@ -68,7 +66,6 @@ const atualizarSituacaoTodosClientes = async () => {
     for (const cliente of clientes) {
       const novaSituacao = calcularSituacao(cliente.ultima_compra);
 
-      // Só atualizar se a situação mudou
       if (cliente.situacao !== novaSituacao) {
         await runQuery(
           'UPDATE clientes SET situacao = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
@@ -77,18 +74,17 @@ const atualizarSituacaoTodosClientes = async () => {
         atualizados++;
       }
 
-      // Contadores para relatório
       if (novaSituacao === 'em_risco') emRisco++;
       else if (novaSituacao === 'inativo') inativos++;
       else ativos++;
     }
 
-    console.log('✅ Atualização concluída!');
-    console.log(`   📊 Total de clientes: ${clientes.length}`);
-    console.log(`   ✅ Ativos: ${ativos}`);
-    console.log(`   ⚠️  Em Risco: ${emRisco}`);
-    console.log(`   ❌ Inativos: ${inativos}`);
-    console.log(`   🔄 Alterados: ${atualizados}`);
+    console.log('Atualização concluída!');
+    console.log(`   Total de clientes: ${clientes.length}`);
+    console.log(`   Ativos: ${ativos}`);
+    console.log(`   Em Risco: ${emRisco}`);
+    console.log(`   Inativos: ${inativos}`);
+    console.log(`   Alterados: ${atualizados}`);
 
     return {
       success: true,
@@ -100,13 +96,14 @@ const atualizarSituacaoTodosClientes = async () => {
     };
 
   } catch (error) {
-    console.error('❌ Erro ao atualizar situação dos clientes:', error);
+    console.error('Erro ao atualizar situação dos clientes:', error);
     throw error;
   }
 };
 
 /**
  * Atualiza a data da última compra de um cliente
+ * 
  * @param {number} clienteId - ID do cliente
  */
 const registrarCompra = async (clienteId) => {
@@ -122,11 +119,11 @@ const registrarCompra = async (clienteId) => {
       [hoje, clienteId]
     );
 
-    console.log(`✅ Compra registrada para cliente ID ${clienteId}`);
+    console.log(`Compra registrada para cliente ID ${clienteId}`);
     return { success: true };
 
   } catch (error) {
-    console.error('❌ Erro ao registrar compra:', error);
+    console.error('Erro ao registrar compra:', error);
     throw error;
   }
 };

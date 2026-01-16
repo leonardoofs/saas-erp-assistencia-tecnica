@@ -156,22 +156,32 @@
   letter-spacing: 0.5px;
 }
 
-/* ATIVO - Verde */
+/* NOVO - Azul (Gradient sutil - igual ao dashboard "Finalizadas") */
+.situacao-novo {
+  background: linear-gradient(135deg, var(--status-finalizada) 0%, var(--status-finalizada) 50%, #5a5aa8 100%);
+  color: var(--white);
+  box-shadow: 0 2px 4px rgba(123, 123, 196, 0.2);
+}
+
+/* ATIVO - Verde (Gradient sutil) */
 .situacao-ativo {
-  background-color: #22c55e;
+  background: linear-gradient(135deg, var(--prioridade-normal) 0%, #5a9a5a 100%);
   color: var(--white);
+  box-shadow: 0 2px 4px rgba(107, 174, 107, 0.2);
 }
 
-/* EM RISCO - Amarelo */
+/* EM RISCO - Amarelo (Gradient sutil - igual ao dashboard "Hoje") */
 .situacao-em-risco {
-  background-color: #eab308;
+  background: linear-gradient(135deg, var(--status-hoje) 0%, var(--status-hoje) 50%, #a89943 100%);
   color: var(--white);
+  box-shadow: 0 2px 4px rgba(196, 180, 84, 0.2);
 }
 
-/* INATIVO - Vermelho */
+/* INATIVO - Vermelho (Gradient sutil) */
 .situacao-inativo {
-  background-color: #ef4444;
+  background: linear-gradient(135deg, var(--status-atrasada) 0%, #c45a5a 100%);
   color: var(--white);
+  box-shadow: 0 2px 4px rgba(229, 104, 104, 0.2);
 }
 
 /* === AÇÕES === */

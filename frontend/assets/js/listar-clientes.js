@@ -83,11 +83,14 @@ function renderizarTabela(clientes) {
     const row = document.createElement('tr');
     
     // Determinar texto e classe da situação
-    let situacaoTexto = 'ATIVO';
-    let situacaoClasse = 'ativo';
-    
+    let situacaoTexto = 'NOVO';
+    let situacaoClasse = 'novo';
+
     if (cliente.situacao) {
-      if (cliente.situacao === 'ativo') {
+      if (cliente.situacao === 'novo') {
+        situacaoTexto = 'NOVO';
+        situacaoClasse = 'novo';
+      } else if (cliente.situacao === 'ativo') {
         situacaoTexto = 'ATIVO';
         situacaoClasse = 'ativo';
       } else if (cliente.situacao === 'em_risco') {
@@ -326,8 +329,8 @@ function criarModalVisualizacao(cliente) {
             </div>
           <div class="info-item">
             <span class="info-label">Situação:</span>
-            <span class="situacao-badge situacao-${cliente.situacao === 'em_risco' ? 'em-risco' : cliente.situacao || 'ativo'}">
-              ${cliente.situacao === 'ativo' ? 'ATIVO' : cliente.situacao === 'em_risco' ? 'EM RISCO' : cliente.situacao === 'inativo' ? 'INATIVO' : 'ATIVO'}
+            <span class="situacao-badge situacao-${cliente.situacao === 'em_risco' ? 'em-risco' : cliente.situacao || 'novo'}">
+              ${cliente.situacao === 'novo' ? 'NOVO' : cliente.situacao === 'ativo' ? 'ATIVO' : cliente.situacao === 'em_risco' ? 'EM RISCO' : cliente.situacao === 'inativo' ? 'INATIVO' : 'NOVO'}
             </span>
           </div>
           </div>

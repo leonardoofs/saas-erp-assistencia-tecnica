@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes da API - UnderTech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .test-group {
+            margin-bottom: 20px;
+        }
+
+        .test-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .test-group input,
+        .test-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .test-group input:focus,
+        .test-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .test-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: monospace;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .response h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .response pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .success {
+            border-left-color: #28a745;
+        }
+
+        .success h3 {
+            color: #28a745;
+        }
+
+        .error {
+            border-left-color: #dc3545;
+        }
+
+        .error h3 {
+            color: #dc3545;
+        }
+
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .info p {
+            margin: 5px 0;
+            color: #1976d2;
+        }
+
+        .token-display {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .method-get { background: #28a745; color: white; }
+        .method-post { background: #007bff; color: white; }
+        .method-put { background: #ffc107; color: black; }
+        .method-delete { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Testes da API - UnderTech</h1>
+
+        <div class="info">
+            <p><strong>ℹ️ Instruções:</strong></p>
+            <p>1. Certifique-se de que o servidor está rodando: <code>npm run dev</code></p>
+            <p>2. Primeiro faça login para obter o token</p>
+            <p>3. Use os outros testes com o token obtido</p>
+            <p>4. Verifique as respostas na área de "Resposta" abaixo de cada teste</p>
+        </div>
+
+        <!-- AUTENTICAÇÃO -->
+        <div class="test-section">
+            <h2>🔐 1. Autenticação</h2>
+
+            <div class="test-group">
+                <label><span class="method-badge method-post">POST</span> Login</label>
+                <input type="text" id="login-username" placeholder="Username" value="admin">
+                <input type="password" id="login-password" placeholder="Senha" value="admin123" style="margin-top: 10px;">
+                <div style="margin-top: 15px;">
+                    <button onclick="testarLogin()">🔑 Fazer Login</button>
+                </div>
+                <div id="login-response"></div>
+            </div>
+        </div>
+
+        <!-- TOKEN ATUAL -->
+        <div class="test-section">
+            <h2>🎫 Token Atual</h2>
+            <div class="token-display" id="token-display">
+                Nenhum token ainda. Faça login primeiro.
+            </div>
+            <button onclick="limparToken()">🗑️ Limpar Token</button>
+        </div>
+
+        <!-- CLIENTES -->
+        <div class="test-section">
+            <h2>👥 2. Clientes</h2>
+
+            <div class="test-group">
+                <label><span class="method-badge method-get">GET</span> Listar Todos os Clientes</label>
+                <button onclick="listarClientes()">📋 Listar Clientes</button>
+                <div id="list-clientes-response"></div>
+            </div>
+
+            <div class="test-group">
+                <label><span class="method-badge method-post">POST</span> Criar Novo Cliente</label>
+                <textarea id="create-cliente-body" placeholder="JSON do cliente">{
+  "nome": "João Silva Teste",
+  "cpf": "12345678901",
+  "telefone": "11987654321",
+  "email": "joao.teste@example.com",
+  "endereco": "Rua Teste, 123",
+  "bairro": "Centro",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "cep": "01000000",
+  "responsavel": "Admin"
+}</textarea>
+                <button onclick="criarCliente()">➕ Criar Cliente</button>
+                <div id="create-cliente-response"></div>
+            </div>
+
+            <div class="test-group">
+                <label><span class="method-badge method-get">GET</span> Buscar Cliente por ID</label>
+                <input type="number" id="get-cliente-id" placeholder="ID do cliente" value="1">
+                <button onclick="buscarCliente()">🔍 Buscar Cliente</button>
+                <div id="get-cliente-response"></div>
+            </div>
+
+            <div class="test-group">
+                <label><span class="method-badge method-put">PUT</span> Atualizar Cliente</label>
+                <input type="number" id="update-cliente-id" placeholder="ID do cliente" value="1">
+                <textarea id="update-cliente-body" placeholder="JSON com dados para atualizar">{
+  "nome": "João Silva Atualizado",
+  "telefone": "(11) 99999-9999"
+}</textarea>
+                <button onclick="atualizarCliente()">✏️ Atualizar Cliente</button>
+                <div id="update-cliente-response"></div>
+            </div>
+
+            <div class="test-group">
+                <label><span class="method-badge method-delete">DELETE</span> Deletar Cliente</label>
+                <input type="number" id="delete-cliente-id" placeholder="ID do cliente">
+                <button onclick="deletarCliente()">🗑️ Deletar Cliente</button>
+                <div id="delete-cliente-response"></div>
+            </div>
+        </div>
+
+        <!-- TESTES DE SEGURANÇA -->
+        <div class="test-section">
+            <h2>🛡️ 3. Testes de Segurança</h2>
+
+            <div class="test-group">
+                <label>Rate Limiting - Enviar 10 requisições rápidas</label>
+                <p style="color: #666; font-size: 14px; margin: 10px 0;">
+                    Este teste vai enviar 10 requisições seguidas para verificar se o rate limiting está funcionando.
+                    Você deve ver algumas requisições serem bloqueadas.
+                </p>
+                <button onclick="testarRateLimit()">⚡ Testar Rate Limit</button>
+                <div id="rate-limit-response"></div>
+            </div>
+
+            <div class="test-group">
+                <label>Validação - Tentar criar cliente com dados inválidos</label>
+                <button onclick="testarValidacao()">❌ Testar Validação</button>
+                <div id="validacao-response"></div>
+            </div>
+
+            <div class="test-group">
+                <label>Autenticação - Tentar acessar sem token</label>
+                <button onclick="testarSemToken()">🚫 Testar Sem Token</button>
+                <div id="sem-token-response"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let currentToken = localStorage.getItem('api_token') || '';
+
+        // Atualizar display do token ao carregar a página
+        window.addEventListener('load', () => {
+            atualizarTokenDisplay();
+        });
+
+        function atualizarTokenDisplay() {
+            const display = document.getElementById('token-display');
+            if (currentToken) {
+                display.textContent = currentToken;
+            } else {
+                display.textContent = 'Nenhum token ainda. Faça login primeiro.';
+            }
+        }
+
+        function limparToken() {
+            currentToken = '';
+            localStorage.removeItem('api_token');
+            atualizarTokenDisplay();
+            mostrarResposta('token-display', 'Token limpo com sucesso!', 'success');
+        }
+
+        function mostrarResposta(elementId, data, tipo = 'info') {
+            const element = document.getElementById(elementId);
+            const className = tipo === 'error' ? 'response error' : tipo === 'success' ? 'response success' : 'response';
+            const title = tipo === 'error' ? '❌ Erro' : tipo === 'success' ? '✅ Sucesso' : 'ℹ️ Resposta';
+
+            element.innerHTML = `
+                <div class="${className}">
+                    <h3>${title}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        async function testarLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            console.log('🔐 Tentando fazer login...', { username });
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                console.log('📥 Resposta do login:', data);
+
+                // O token está em data.data.token (estrutura do backend)
+                if (response.ok && data.data && data.data.token) {
+                    currentToken = data.data.token;
+                    localStorage.setItem('api_token', currentToken);
+                    console.log('✅ Token salvo:', currentToken.substring(0, 20) + '...');
+                    atualizarTokenDisplay();
+                    mostrarResposta('login-response', data, 'success');
+                } else {
+                    console.error('❌ Login falhou:', data);
+                    mostrarResposta('login-response', data, 'error');
+                }
+            } catch (error) {
+                console.error('❌ Erro no login:', error);
+                mostrarResposta('login-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function listarClientes() {
+            // Recarregar token do localStorage
+            currentToken = localStorage.getItem('api_token') || '';
+            console.log('📋 Listando clientes... Token:', currentToken ? 'Presente (' + currentToken.substring(0, 20) + '...)' : 'Ausente');
+
+            if (!currentToken) {
+                console.error('❌ Token não encontrado!');
+                alert('Faça login primeiro para obter o token!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/clientes`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+
+                const data = await response.json();
+                console.log('📥 Resposta listar clientes:', data);
+                mostrarResposta('list-clientes-response', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                console.error('❌ Erro ao listar clientes:', error);
+                mostrarResposta('list-clientes-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function criarCliente() {
+            // Recarregar token do localStorage
+            currentToken = localStorage.getItem('api_token') || '';
+
+            if (!currentToken) {
+                alert('Faça login primeiro para obter o token!');
+                return;
+            }
+
+            const body = document.getElementById('create-cliente-body').value;
+            console.log('➕ Criando cliente com body:', body);
+
+            try {
+                const response = await fetch(`${API_URL}/clientes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: body
+                });
+
+                const data = await response.json();
+                console.log('📥 Resposta criar cliente:', data);
+                mostrarResposta('create-cliente-response', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                console.error('❌ Erro ao criar cliente:', error);
+                mostrarResposta('create-cliente-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function buscarCliente() {
+            // Recarregar token do localStorage
+            currentToken = localStorage.getItem('api_token') || '';
+
+            if (!currentToken) {
+                alert('Faça login primeiro para obter o token!');
+                return;
+            }
+
+            const id = document.getElementById('get-cliente-id').value;
+
+            try {
+                const response = await fetch(`${API_URL}/clientes/${id}`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+
+                const data = await response.json();
+                mostrarResposta('get-cliente-response', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                mostrarResposta('get-cliente-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function atualizarCliente() {
+            // Recarregar token do localStorage
+            currentToken = localStorage.getItem('api_token') || '';
+
+            if (!currentToken) {
+                alert('Faça login primeiro para obter o token!');
+                return;
+            }
+
+            const id = document.getElementById('update-cliente-id').value;
+            const body = document.getElementById('update-cliente-body').value;
+
+            try {
+                const response = await fetch(`${API_URL}/clientes/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: body
+                });
+
+                const data = await response.json();
+                mostrarResposta('update-cliente-response', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                mostrarResposta('update-cliente-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function deletarCliente() {
+            // Recarregar token do localStorage
+            currentToken = localStorage.getItem('api_token') || '';
+
+            if (!currentToken) {
+                alert('Faça login primeiro para obter o token!');
+                return;
+            }
+
+            const id = document.getElementById('delete-cliente-id').value;
+
+            if (!confirm(`Tem certeza que deseja deletar o cliente ID ${id}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/clientes/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+
+                const data = await response.json();
+                mostrarResposta('delete-cliente-response', data, response.ok ? 'success' : 'error');
+            } catch (error) {
+                mostrarResposta('delete-cliente-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function testarRateLimit() {
+            const resultados = [];
+
+            for (let i = 0; i < 10; i++) {
+                try {
+                    const response = await fetch(`${API_URL}/clientes`, {
+                        headers: { 'Authorization': `Bearer ${currentToken}` }
+                    });
+
+                    resultados.push({
+                        requisicao: i + 1,
+                        status: response.status,
+                        statusText: response.statusText,
+                        limitRestante: response.headers.get('X-RateLimit-Remaining')
+                    });
+                } catch (error) {
+                    resultados.push({
+                        requisicao: i + 1,
+                        erro: error.message
+                    });
+                }
+            }
+
+            mostrarResposta('rate-limit-response', resultados, 'info');
+        }
+
+        async function testarValidacao() {
+            const dadosInvalidos = {
+                nome: "AB",  // Nome muito curto
+                cpf: "123",  // CPF inválido
+                telefone: "123",  // Telefone inválido
+                email: "email-invalido"  // Email inválido
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/clientes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify(dadosInvalidos)
+                });
+
+                const data = await response.json();
+                mostrarResposta('validacao-response', data, 'error');
+            } catch (error) {
+                mostrarResposta('validacao-response', { erro: error.message }, 'error');
+            }
+        }
+
+        async function testarSemToken() {
+            try {
+                const response = await fetch(`${API_URL}/clientes`);
+                const data = await response.json();
+                mostrarResposta('sem-token-response', data, 'error');
+            } catch (error) {
+                mostrarResposta('sem-token-response', { erro: error.message }, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

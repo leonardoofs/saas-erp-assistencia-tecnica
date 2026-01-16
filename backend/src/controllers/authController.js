@@ -1,21 +1,17 @@
 const bcrypt = require('bcryptjs');
 const { runQuery, getQuery } = require('../config/database');
 const { generateToken } = require('../config/jwt');
+const { AppError } = require('../middlewares/errorHandler');
+
+// Número de rounds do bcrypt (configurável via env)
+const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 12;
 
 /**
  * Registrar novo usuário
  */
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   try {
     const { username, password, name, email } = req.body;
-
-    // Validação básica
-    if (!username || !password || !name) {
-      return res.status(400).json({
-        success: false,
-        message: 'Preencha todos os campos obrigatórios'
-      });
-    }
 
     // Verificar se usuário já existe
     const userExists = await getQuery(
@@ -24,14 +20,11 @@ const register = async (req, res) => {
     );
 
     if (userExists) {
-      return res.status(400).json({
-        success: false,
-        message: 'Usuário ou email já cadastrado'
-      });
+      throw new AppError('Usuário ou email já cadastrado', 400);
     }
 
-    // Hash da senha
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash da senha com rounds configuráveis
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
     // Inserir usuário
     const result = await runQuery(
@@ -50,28 +43,16 @@ const register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erro ao registrar usuário:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erro ao criar usuário'
-    });
+    next(error);
   }
 };
 
 /**
  * Login de usuário
  */
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-
-    // Validação básica
-    if (!username || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Usuário e senha são obrigatórios'
-      });
-    }
 
     // Buscar usuário
     const user = await getQuery(
@@ -80,20 +61,14 @@ const login = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Usuário ou senha inválidos'
-      });
+      throw new AppError('Usuário ou senha inválidos', 401);
     }
 
     // Verificar senha
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return res.status(401).json({
-        success: false,
-        message: 'Usuário ou senha inválidos'
-      });
+      throw new AppError('Usuário ou senha inválidos', 401);
     }
 
     // Gerar token
@@ -119,18 +94,14 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erro ao fazer login:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erro ao fazer login'
-    });
+    next(error);
   }
 };
 
 /**
  * Obter dados do usuário logado
  */
-const getMe = async (req, res) => {
+const getMe = async (req, res, next) => {
   try {
     res.json({
       success: true,
@@ -139,11 +110,7 @@ const getMe = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Erro ao buscar usuário:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erro ao buscar dados do usuário'
-    });
+    next(error);
   }
 };
 

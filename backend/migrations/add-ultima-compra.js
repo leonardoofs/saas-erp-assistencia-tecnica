@@ -36,7 +36,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 // Adicionar coluna ultima_compra à tabela clientes
 db.run(`
   ALTER TABLE clientes 
-  ADD COLUMN ultima_compra DATE DEFAULT NULL
+  ADD COLUMN telefone_contato TEXT DEFAULT NULL
 `, (err) => {
   if (err) {
     if (err.message.includes('duplicate column name')) {

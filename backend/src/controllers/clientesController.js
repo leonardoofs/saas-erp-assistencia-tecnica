@@ -1,47 +1,22 @@
-const { runQuery, getQuery, allQuery } = require('../config/database');
-const { aplicarSituacaoEmClientes } = require('../services/situacaoService');
+/**
+ * UnderTech - Clientes Controller
+ * Camada de controle para endpoints de clientes
+ */
+
+const ClienteService = require('../services/clienteService');
 
 /**
- * Listar todos os clientes
+ * Lista todos os clientes
+ * GET /api/clientes
  */
 const listarClientes = async (req, res) => {
   try {
-    const { search, page = 1, limit = 50 } = req.query;
-    const offset = (page - 1) * limit;
-
-    let sql = 'SELECT * FROM clientes';
-    let params = [];
-
-    // Filtro de busca
-    if (search) {
-      sql += ' WHERE nome LIKE ? OR cpf LIKE ? OR telefone LIKE ?';
-      params = [`%${search}%`, `%${search}%`, `%${search}%`];
-    }
-
-    sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-    params.push(parseInt(limit), offset);
-
-    const clientes = await allQuery(sql, params);
-
-    // APLICAR SITUAÇÃO AUTOMÁTICA
-    const clientesComSituacao = aplicarSituacaoEmClientes(clientes);
-
-    // Contar total
-    let countSql = 'SELECT COUNT(*) as total FROM clientes';
-    if (search) {
-      countSql += ' WHERE nome LIKE ? OR cpf LIKE ? OR telefone LIKE ?';
-    }
-    const total = await getQuery(countSql, search ? [`%${search}%`, `%${search}%`, `%${search}%`] : []);
+    const resultado = await ClienteService.listar(req.query);
 
     res.json({
       success: true,
-      data: clientesComSituacao,
-      pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        total: total.total,
-        pages: Math.ceil(total.total / limit)
-      }
+      data: resultado.data,
+      pagination: resultado.pagination
     });
   } catch (error) {
     console.error('Erro ao listar clientes:', error);
@@ -53,30 +28,28 @@ const listarClientes = async (req, res) => {
 };
 
 /**
- * Buscar cliente por ID
+ * Busca cliente por ID
+ * GET /api/clientes/:id
  */
 const buscarCliente = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const cliente = await getQuery('SELECT * FROM clientes WHERE id = ?', [id]);
-
-    if (!cliente) {
-      return res.status(404).json({
-        success: false,
-        message: 'Cliente não encontrado'
-      });
-    }
-
-    // APLICAR SITUAÇÃO AUTOMÁTICA
-    const clientesComSituacao = aplicarSituacaoEmClientes([cliente]);
+    const cliente = await ClienteService.buscarPorId(id);
 
     res.json({
       success: true,
-      data: clientesComSituacao[0]
+      data: cliente
     });
   } catch (error) {
     console.error('Erro ao buscar cliente:', error);
+    
+    if (error.message === 'Cliente não encontrado') {
+      return res.status(404).json({
+        success: false,
+        message: error.message
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erro ao buscar cliente'
@@ -85,63 +58,32 @@ const buscarCliente = async (req, res) => {
 };
 
 /**
- * Criar novo cliente - COM VERIFICAÇÃO DE CPF DUPLICADO
+ * Cria novo cliente
+ * POST /api/clientes
  */
-
 const criarCliente = async (req, res) => {
   try {
-    const {
-      nome,
-      cpf,
-      telefone,
-      telefone_contato,
-      email,
-      situacao,
-      responsavel,
-      endereco,
-      cidade,
-      estado,
-      cep,
-      observacoes
-    } = req.body;
-
-    // Validação básica
-    if (!nome || !telefone) {
-      return res.status(400).json({
-        success: false,
-        message: 'Nome e telefone são obrigatórios'
-      });
-    }
-
-    // 🔧 CORREÇÃO: Verificar se CPF já existe (se fornecido)
-    if (cpf) {
-      const clienteExistente = await getQuery('SELECT id, nome FROM clientes WHERE cpf = ?', [cpf]);
-      if (clienteExistente) {
-        return res.status(400).json({
-          success: false,
-          message: `CPF já cadastrado para o cliente "${clienteExistente.nome}"`
-        });
-      }
-    }
-
-    const result = await runQuery(
-      `INSERT INTO clientes (nome, cpf, telefone, telefone_contato, email, situacao, responsavel, endereco, cidade, estado, cep, observacoes)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [nome, cpf, telefone, telefone_contato, email, situacao || 'ativo', responsavel, endereco, cidade, estado, cep, observacoes]
-    );
+    const resultado = await ClienteService.criar(req.body);
 
     res.status(201).json({
       success: true,
       message: 'Cliente cadastrado com sucesso',
-      data: {
-        id: result.id,
-        nome,
-        cpf,
-        telefone
-      }
+      data: resultado
     });
   } catch (error) {
     console.error('Erro ao criar cliente:', error);
+
+    if (
+      error.message.includes('obrigatório') ||
+      error.message.includes('inválido') ||
+      error.message.includes('já cadastrado')
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erro ao cadastrar cliente'
@@ -150,58 +92,13 @@ const criarCliente = async (req, res) => {
 };
 
 /**
- * Atualizar cliente - COM VERIFICAÇÃO DE CPF DUPLICADO
+ * Atualiza cliente existente
+ * PUT /api/clientes/:id
  */
 const atualizarCliente = async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      nome,
-      cpf,
-      telefone,
-      telefone_contato,
-      email,
-      situacao,
-      responsavel,
-      endereco,
-      cidade,
-      estado,
-      cep,
-      observacoes
-    } = req.body;
-
-    // Verificar se cliente existe
-    const clienteExistente = await getQuery('SELECT id FROM clientes WHERE id = ?', [id]);
-    if (!clienteExistente) {
-      return res.status(404).json({
-        success: false,
-        message: 'Cliente não encontrado'
-      });
-    }
-
-    // 🔧 CORREÇÃO: Verificar se CPF já existe em OUTRO cliente
-    if (cpf) {
-      const cpfDuplicado = await getQuery(
-        'SELECT id, nome FROM clientes WHERE cpf = ? AND id != ?',
-        [cpf, id]
-      );
-      
-      if (cpfDuplicado) {
-        return res.status(400).json({
-          success: false,
-          message: `CPF já cadastrado para o cliente "${cpfDuplicado.nome}"`
-        });
-      }
-    }
-
-    await runQuery(
-      `UPDATE clientes 
-       SET nome = ?, cpf = ?, telefone = ?, telefone_contato = ?, email = ?, situacao = ?,
-           responsavel = ?, endereco = ?, cidade = ?, estado = ?, cep = ?, 
-           observacoes = ?, updated_at = CURRENT_TIMESTAMP
-       WHERE id = ?`,
-      [nome, cpf, telefone, telefone_contato, email, situacao, responsavel, endereco, cidade, estado, cep, observacoes, id]
-    );
+    await ClienteService.atualizar(id, req.body);
 
     res.json({
       success: true,
@@ -209,6 +106,24 @@ const atualizarCliente = async (req, res) => {
     });
   } catch (error) {
     console.error('Erro ao atualizar cliente:', error);
+
+    if (error.message === 'Cliente não encontrado') {
+      return res.status(404).json({
+        success: false,
+        message: error.message
+      });
+    }
+
+    if (
+      error.message.includes('inválido') ||
+      error.message.includes('já cadastrado')
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erro ao atualizar cliente'
@@ -217,31 +132,13 @@ const atualizarCliente = async (req, res) => {
 };
 
 /**
- * Deletar cliente
+ * Remove cliente
+ * DELETE /api/clientes/:id
  */
 const deletarCliente = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Verificar se cliente tem ordens/reformas associadas
-    const ordensCount = await getQuery(
-      'SELECT COUNT(*) as count FROM ordens_servico WHERE cliente_id = ?',
-      [id]
-    );
-    
-    const reformasCount = await getQuery(
-      'SELECT COUNT(*) as count FROM reformas_aparelho WHERE cliente_id = ?',
-      [id]
-    );
-
-    if (ordensCount.count > 0 || reformasCount.count > 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Não é possível deletar cliente com ordens/reformas associadas'
-      });
-    }
-
-    await runQuery('DELETE FROM clientes WHERE id = ?', [id]);
+    await ClienteService.deletar(id);
 
     res.json({
       success: true,
@@ -249,6 +146,14 @@ const deletarCliente = async (req, res) => {
     });
   } catch (error) {
     console.error('Erro ao deletar cliente:', error);
+
+    if (error.message.includes('associadas')) {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Erro ao deletar cliente'

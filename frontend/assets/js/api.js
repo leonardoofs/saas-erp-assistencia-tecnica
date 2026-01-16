@@ -3,14 +3,13 @@
  * Cliente HTTP para comunicação com o backend
  */
 
-const API_BASE_URL = 'http://localhost:3000/api';
-
 /**
  * Classe para gerenciar chamadas HTTP
  */
 class ApiClient {
   constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+    this.baseUrl = baseUrl || (window.CONFIG?.API_BASE_URL || 'http://localhost:3000/api');
+    this.requestTimeout = window.CONFIG?.REQUEST_TIMEOUT || 30000;
   }
 
   /**
@@ -65,6 +64,12 @@ class ApiClient {
       }
 
       if (!response.ok) {
+        // Se for erro de validação (400), mostrar detalhes
+        if (response.status === 400 && data.errors && Array.isArray(data.errors)) {
+          console.error('❌ Erros de validação:', data.errors);
+          const errorMessages = data.errors.map(err => err.msg).join('; ');
+          throw new Error(errorMessages || 'Erros de validação');
+        }
         throw new Error(data.message || 'Erro na requisição');
       }
 
@@ -119,7 +124,7 @@ class ApiClient {
 }
 
 // Instância global da API
-const api = new ApiClient(API_BASE_URL);
+const api = new ApiClient();
 
 /**
  * Módulo de autenticação
