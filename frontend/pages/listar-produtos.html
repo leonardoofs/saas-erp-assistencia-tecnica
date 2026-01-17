@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Listar Clientes - UnderTech</title>
-  
+  <title>Listar Produtos - UnderTech</title>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- CSS -->
   <link rel="stylesheet" href="../assets/css/variables.css">
   <link rel="stylesheet" href="../assets/css/reset.css">
   <link rel="stylesheet" href="../assets/css/layout.css">
   <link rel="stylesheet" href="../assets/css/components.css">
   <link rel="stylesheet" href="../assets/css/sidebar-dropdown.css">
-  <link rel="stylesheet" href="../assets/css/listar-clientes.css">
+  <link rel="stylesheet" href="../assets/css/listar-produtos.css">
 </head>
 <body>
   <div class="app-container">
@@ -57,9 +57,9 @@
         <nav class="sidebar-nav">
           <ul>
             <li><a href="dashboard.html" class="nav-item">Início</a></li>
-            
+
             <li class="nav-item-dropdown" id="dropdown-clientes">
-              <button class="nav-item-toggle active">
+              <button class="nav-item-toggle">
                 <span class="nav-item-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -73,14 +73,14 @@
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
-              <ul class="nav-submenu open">
+              <ul class="nav-submenu">
                 <li><a href="cadastrar-cliente.html" class="nav-subitem">Cadastrar cliente</a></li>
-                <li><a href="listar-clientes.html" class="nav-subitem active">Listar clientes</a></li>
+                <li><a href="listar-clientes.html" class="nav-subitem">Listar clientes</a></li>
               </ul>
             </li>
 
             <li class="nav-item-dropdown" id="dropdown-produtos">
-              <button class="nav-item-toggle">
+              <button class="nav-item-toggle active">
                 <span class="nav-item-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
@@ -94,12 +94,12 @@
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
-              <ul class="nav-submenu">
+              <ul class="nav-submenu open">
                 <li><a href="cadastrar-produto.html" class="nav-subitem">Cadastrar produto</a></li>
-                <li><a href="listar-produtos.html" class="nav-subitem">Listar produtos</a></li>
+                <li><a href="listar-produtos.html" class="nav-subitem active">Listar produtos</a></li>
               </ul>
             </li>
-            
+
             <li class="nav-item-dropdown" id="dropdown-ordens">
               <button class="nav-item-toggle">
                 <span class="nav-item-icon">
@@ -156,13 +156,13 @@
       <main class="content">
         <!-- Título da Página -->
         <div class="welcome-section">
-          <h2 class="welcome-title">Listar clientes</h2>
+          <h2 class="welcome-title">Listar produtos</h2>
           <nav class="breadcrumb">
             <a href="dashboard.html" class="breadcrumb-link">Início</a>
             <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">Clientes</span>
+            <span class="breadcrumb-current">Produtos</span>
             <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">Listar clientes</span>
+            <span class="breadcrumb-current">Listar produtos</span>
           </nav>
         </div>
 
@@ -171,41 +171,61 @@
           <!-- Barra de Filtros -->
           <div class="filter-bar">
             <div class="search-box">
-              <input type="text" id="search-input" class="search-input" placeholder="Buscar por nome, CPF ou telefone...">
+              <input type="text" id="search-input" class="search-input" placeholder="Buscar por nome, código, marca ou modelo...">
               <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"></circle>
                 <path d="m21 21-4.35-4.35"></path>
               </svg>
             </div>
 
-            <button class="btn-add" onclick="window.location.href='cadastrar-cliente.html'">
+            <div class="filter-group">
+              <select id="categoria-filter" class="filter-select">
+                <option value="">Todas as categorias</option>
+                <option value="telas">Telas</option>
+                <option value="baterias">Baterias</option>
+                <option value="capinhas">Capinhas</option>
+                <option value="acessorios">Acessórios</option>
+                <option value="outros">Outros</option>
+              </select>
+
+              <select id="status-filter" class="filter-select">
+                <option value="">Todos os status</option>
+                <option value="1">Ativos</option>
+                <option value="0">Inativos</option>
+              </select>
+            </div>
+
+            <button class="btn-add" onclick="window.location.href='cadastrar-produto.html'">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              Novo Cliente
+              Novo Produto
             </button>
           </div>
 
-          <!-- Tabela de Clientes -->
+          <!-- Tabela de Produtos -->
           <div class="table-container">
-            <table class="clients-table">
+            <table class="products-table">
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Código</th>
                   <th>Nome</th>
-                  <th>CPF</th>
-                  <th>Telefone</th>
-                  <th>Instagram</th>
-                  <th>Situação</th>
+                  <th>Categoria</th>
+                  <th>Marca</th>
+                  <th>Preço Custo</th>
+                  <th>Preço Venda</th>
+                  <th>Margem</th>
+                  <th>Status</th>
                   <th>Ações</th>
                 </tr>
               </thead>
-              <tbody id="clients-tbody">
+              <tbody id="products-tbody">
                 <tr>
-                  <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                  <td colspan="10" style="text-align: center; padding: 40px; color: #666;">
                     <div class="loading-spinner"></div>
-                    Carregando clientes...
+                    Carregando produtos...
                   </td>
                 </tr>
               </tbody>
@@ -215,7 +235,7 @@
           <!-- Paginação -->
           <div class="pagination-container">
             <div class="pagination-info">
-              Mostrando <span id="showing-count">0</span> de <span id="total-count">0</span> clientes
+              Mostrando <span id="showing-count">0</span> de <span id="total-count">0</span> produtos
             </div>
             <div class="pagination-controls" id="pagination-controls">
               <!-- Botões de paginação serão inseridos via JS -->
@@ -226,12 +246,28 @@
     </div>
   </div>
 
+  <!-- Modal de Detalhes do Produto -->
+  <div id="modal-detalhes" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detalhes do Produto</h3>
+        <button class="modal-close" onclick="fecharModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+        <!-- Conteúdo será inserido via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-close" onclick="fecharModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="../assets/js/config.js"></script>
   <script src="../assets/js/utils.js"></script>
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/sidebar.js"></script>
-  <script src="../assets/js/listar-clientes.js"></script>
+  <script src="../assets/js/listar-produtos.js"></script>
 </body>
 </html>

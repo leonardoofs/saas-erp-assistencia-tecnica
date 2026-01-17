@@ -61,6 +61,11 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/clientes', clientesRoutes);
+app.use('/api/produtos', require('./src/routes/produtoRoutes'));
+app.use('/api/grupos', require('./src/routes/grupoRoutes'));
+app.use('/api/subgrupos', require('./src/routes/subgrupoRoutes'));
+app.use('/api/garantias', require('./src/routes/garantiaRoutes'));
+app.use('/api/fabricantes', require('./src/routes/fabricanteRoutes'));
 app.use('/api/ordens', ordensRoutes);
 app.use('/api/reformas', reformasRoutes);
 

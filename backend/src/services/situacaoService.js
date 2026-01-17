@@ -2,9 +2,10 @@
  * UnderTech - Serviço de Situação de Clientes
  *
  * REGRAS DE NEGÓCIO:
- * - 0-90 dias = "Ativo" (Cliente Quente)
- * - 91-180 dias = "Em Risco" (Cliente Morno)
- * - 181-360 dias = "Inativo" (Cliente Frio)
+ * - NULL = "Novo" (Sem compra)
+ * - <= 90 dias = "Ativo" (Cliente Quente)
+ * - > 90 e <= 180 dias = "Em Risco" (Cliente Morno)
+ * - > 180 dias = "Inativo" (Cliente Frio)
  */
 
 const { runQuery, allQuery } = require('../config/database');
@@ -16,8 +17,8 @@ const { runQuery, allQuery } = require('../config/database');
  * @returns {string} "novo", "ativo", "em_risco" ou "inativo"
  */
 const calcularSituacao = (ultimaCompra) => {
-  if (!ultimaCompra) {
-    return 'novo';         // Sem compra = Cliente Novo
+  if (!ultimaCompra || ultimaCompra === null) {
+    return 'novo';         // NULL = Cliente Novo
   }
 
   const hoje = new Date();
@@ -27,11 +28,11 @@ const calcularSituacao = (ultimaCompra) => {
   const diasSemComprar = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
 
   if (diasSemComprar <= 90) {
-    return 'ativo';        // 0-90 dias = Cliente Quente
-  } else if (diasSemComprar <= 180) {
-    return 'em_risco';     // 91-180 dias = Cliente Morno
+    return 'ativo';        // <= 90 dias = Cliente Ativo
+  } else if (diasSemComprar > 90 && diasSemComprar <= 180) {
+    return 'em_risco';     // > 90 e <= 180 dias = Cliente Em Risco
   } else {
-    return 'inativo';      // 181+ dias = Cliente Frio
+    return 'inativo';      // > 180 dias = Cliente Inativo
   }
 };
 
