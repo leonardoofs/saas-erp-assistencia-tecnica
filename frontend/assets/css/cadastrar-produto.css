@@ -208,6 +208,25 @@ select.form-input {
   opacity: 0.6;
 }
 
+/* === CAMPOS DESABILITADOS (SELECT E INPUT) === */
+.form-input:disabled,
+select.form-input:disabled {
+  background-color: #e8e8e8;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 1;
+  border-color: #d0d0d0;
+}
+
+.form-input:disabled::placeholder {
+  color: #aaa;
+}
+
+/* Estilo específico para select desabilitado */
+select.form-input:disabled {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+}
+
 /* === BOTÕES DE AÇÃO === */
 .form-actions {
   display: flex;
@@ -386,25 +405,125 @@ select.form-input {
   }
 }
 
-/* === BOTÕES ESPECIAIS === */
-.btn-generate-code {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: 10px;
-  padding: 4px 8px;
-  font-size: 12px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
+/* === INPUT COM BOTÃO INTEGRADO === */
+.input-with-button {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
 }
 
-.btn-generate-code:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
+.input-with-button .form-input {
+  flex: 1;
+  padding-right: 155px; /* Espaço para o botão maior */
+  min-height: 48px; /* Altura mínima para alinhar com o botão */
+}
+
+.btn-input-action {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-width: 150px;
+  height: 100%; /* Ocupa toda a altura do input */
+  padding: 0 16px;
+  background: linear-gradient(135deg, var(--primary-orange) 0%, #e67e22 100%);
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0; /* Arredondado apenas no lado direito */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -2px 0 8px rgba(255, 127, 39, 0.15);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.btn-input-action:hover {
+  background: linear-gradient(135deg, #e67e22 0%, var(--primary-orange) 100%);
+  box-shadow: -2px 0 12px rgba(255, 127, 39, 0.3);
+  transform: translateX(-2px);
+}
+
+.btn-input-action:active {
+  transform: scale(0.98);
+  box-shadow: -1px 0 6px rgba(255, 127, 39, 0.25);
+}
+
+.btn-input-action svg {
+  flex-shrink: 0;
+  animation: rotate-icon 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-input-action:hover svg {
+  animation: rotate-icon 0.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.btn-input-action .btn-text {
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+@keyframes rotate-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* === RESPONSIVIDADE DO BOTÃO GERAR CÓDIGO === */
+@media (max-width: 768px) {
+  .input-with-button {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-with-button .form-input {
+    padding-right: 12px; /* Remove espaço para o botão */
+    width: 100%;
+  }
+
+  .btn-input-action {
+    position: static; /* Remove posicionamento absoluto */
+    width: 100%;
+    min-width: auto;
+    height: 48px;
+    border-radius: 8px; /* Arredondado em todos os lados */
+    transform: none !important; /* Remove transformações em mobile */
+  }
+
+  .btn-input-action:hover {
+    transform: none !important;
+  }
+
+  .btn-input-action:active {
+    transform: scale(0.98) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-input-action {
+    font-size: 12px;
+    padding: 0 12px;
+    gap: 6px;
+  }
+
+  .btn-input-action svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .btn-input-action .btn-text {
+    letter-spacing: 0.5px;
+  }
 }
 
 .btn-manage {

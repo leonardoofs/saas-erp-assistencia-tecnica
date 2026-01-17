@@ -425,5 +425,5 @@ function configurarAbas() {
 // UTILIDADES
 // ====================
 function mostrarMensagem(msg, tipo) {
-  alert(msg);
+  utils.showToast(msg, tipo);
 }
